@@ -1,0 +1,21 @@
+{
+  "name": "zeropowers-cline",
+  "version": "1.0.0",
+  "description": "Cline/Roo Code plugin for ZeroPowers - optimized for local AI models like Ollama + Qwen2.5-coder. 100% offline & free.",
+  "author": "ghifari",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NurdinHidayatullohelghifari/zeropowers.git"
+  },
+  "keywords": [
+    "cline",
+    "roo-code",
+    "superpowers",
+    "ollama",
+    "qwen2.5-coder",
+    "local-ai",
+    "offline",
+    "agentic-skills"
+  ],
+  "license": "MIT"
+}
