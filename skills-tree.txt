@@ -1,0 +1,7 @@
+skills/
+  ├── local-ai-efficiency/
+  │   └── SKILL.md
+  ├── context-window-guard/
+  │   └── SKILL.md
+  └── offline-first-development/
+      └── SKILL.md
