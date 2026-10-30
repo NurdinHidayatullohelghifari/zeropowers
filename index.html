@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroPowers - Local AI Skills Framework</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; padding: 20px; color: #e2e8f0; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        header { text-align: center; padding: 40px 20px; margin-bottom: 30px; }
+        header h1 { font-size: 3em; margin-bottom: 10px; background: linear-gradient(to right, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        header p { font-size: 1.2em; color: #94a3b8; }
+        .badge { display: inline-block; background: #0ea5e9; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85em; font-weight: 600; margin-top: 10px; }
+        .action-buttons { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin: 30px 0; }
+        .btn { padding: 12px 24px; border: none; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+        .btn-primary { background: #38bdf8; color: #0f172a; }
+        .btn-secondary { background: #334155; color: white; border: 1px solid #475569; }
+        .btn-success { background: #22c55e; color: white; }
+        .info-box { background: #1e293b; border-radius: 12px; padding: 25px; margin: 30px 0; border-left: 4px solid #38bdf8; }
+        .info-box h3 { color: #38bdf8; margin-bottom: 15px; }
+        .info-box ol { margin-left: 20px; line-height: 1.8; color: #cbd5e1; }
+        .info-box code { background: #0f172a; padding: 2px 6px; border-radius: 4px; color: #38bdf8; font-family: monospace; }
+        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px; }
+        .skill-card { background: #1e293b; border-radius: 12px; padding: 25px; border: 1px solid #334155; transition: transform 0.3s ease; }
+        .skill-card:hover { transform: translateY(-5px); border-color: #38bdf8; }
+        .skill-card h3 { color: #f8fafc; margin-bottom: 10px; font-size: 1.3em; }
+        .skill-card p { color: #94a3b8; margin-bottom: 15px; line-height: 1.6; font-size: 0.95em; }
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+        .tag { background: #0f172a; color: #38bdf8; padding: 4px 10px; border-radius: 6px; font-size: 0.75em; font-weight: 600; border: 1px solid #1e293b; }
+        .card-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+        .card-btn { padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600; transition: all 0.2s ease; }
+        .card-btn-vscode { background: #0ea5e9; color: white; }
+        .card-btn-github { background: #334155; color: white; border: 1px solid #475569; }
+        .card-btn:hover { opacity: 0.8; }
+        footer { text-align: center; padding: 40px 20px; margin-top: 40px; color: #64748b; font-size: 0.9em; border-top: 1px solid #334155; }
+        footer a { color: #38bdf8; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 ZeroPowers</h1>
+            <p>Agentic Skills Framework untuk AI Lokal (Ollama + Qwen2.5-coder)</p>
+            <span class="badge">100% Offline • Gratis • Open Source</span>
+        </header>
+
+        <div class="action-buttons">
+            <a href="https://github.com/NurdinHidayatullohelghifari/zeropowers" target="_blank" class="btn btn-primary">🐙 Lihat di GitHub</a>
+            <a href="vscode://vscode.git/clone?url=https://github.com/NurdinHidayatullohelghifari/zeropowers" class="btn btn-secondary">📂 Clone di VS Code</a>
+            <a href="https://ollama.com" target="_blank" class="btn btn-success">🦙 Download Ollama</a>
+        </div>
+
+        <div class="info-box">
+            <h3>📖 Cara Pakai</h3>
+            <ol>
+                <li>Install <strong>Ollama</strong> dan jalankan model: <code>ollama run qwen2.5-coder:7b</code></li>
+                <li>Install extension <strong>Cline</strong> atau <strong>Roo Code</strong> di VS Code.</li>
+                <li>Di settings Cline, pilih Provider: <strong>Ollama</strong> dan Model: <code>qwen2.5-coder:7b</code>.</li>
+                <li>Copy folder <code>skills/</code> dari repo ini ke dalam project kamu, atau arahkan Cline untuk membaca file <code>SKILL.md</code>.</li>
+                <li>AI kamu sekarang punya superpowers! 🎉</li>
+            </ol>
+        </div>
+
+        <h2 style="text-align: center; margin: 40px 0 20px; color: #f8fafc;">✨ Skills yang Tersedia</h2>
+
+        <div class="skills-grid">
+            <div class="skill-card">
+                <h3>⚡ Local AI Efficiency</h3>
+                <div class="tags"><span class="tag">Token Efficiency</span><span class="tag">No Hallucination</span></div>
+                <p>Optimasi output untuk model AI lokal. Hemat token, ringkas, dan bebas halusinasi API cloud.</p>
+                <div class="card-buttons">
+                    <a href="https://github.com/NurdinHidayatullohelghifari/zeropowers/blob/main/skills/local-ai-efficiency/SKILL.md" target="_blank" class="card-btn card-btn-github">📄 Lihat Skill</a>
+                </div>
+            </div>
+
+            <div class="skill-card">
+                <h3>🛡️ Context Window Guard</h3>
+                <div class="tags"><span class="tag">Memory Management</span><span class="tag">Auto-Summarize</span></div>
+                <p>Mencegah model kehabisan context window. Auto-summarize percakapan panjang dan jaga fokus.</p>
+                <div class="card-buttons">
+                    <a href="https://github.com/NurdinHidayatullohelghifari/zeropowers/blob/main/skills/context-window-guard/SKILL.md" target="_blank" class="card-btn card-btn-github">📄 Lihat Skill</a>
+                </div>
+            </div>
+
+            <div class="skill-card">
+                <h3>🌐 Offline-First Development</h3>
+                <div class="tags"><span class="tag">No Internet</span><span class="tag">Local Tools</span></div>
+                <p>Panduan agen untuk selalu assume offline, tidak suggest cloud API, dan pakai tool lokal.</p>
+                <div class="card-buttons">
+                    <a href="https://github.com/NurdinHidayatullohelghifari/zeropowers/blob/main/skills/offline-first-development/SKILL.md" target="_blank" class="card-btn card-btn-github">📄 Lihat Skill</a>
+                </div>
+            </div>
+
+            <div class="skill-card">
+                <h3>🎨 Multimodal Generation</h3>
+                <div class="tags"><span class="tag">Text-to-Speech</span><span class="tag">Text-to-Image</span><span class="tag">100% Free</span></div>
+                <p>Panduan lengkap Text-to-Speech, Text-to-Image, dan lainnya. 100% lokal, open-source, dan gratis!</p>
+                <div class="card-buttons">
+                    <a href="https://github.com/NurdinHidayatullohelghifari/zeropowers/blob/main/skills/multimodal-generation/SKILL.md" target="_blank" class="card-btn card-btn-github">📄 Lihat Skill</a>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Dibuat dengan ❤️ oleh <strong>Nurdin Hidayatulloh Elghifari</strong></p>
+            <p style="margin-top: 10px;">
+                <a href="https://github.com/NurdinHidayatullohelghifari/zeropowers" target="_blank">GitHub Repo</a> • 
+                <a href="https://github.com/NurdinHidayatullohelghifari/zeropowers/releases" target="_blank">Releases</a>
+            </p>
+            <p style="margin-top: 15px; font-size: 0.85em;">Lisensi MIT © 2026</p>
+        </footer>
+    </div>
+</body>
+</html>
