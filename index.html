@@ -5,45 +5,334 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZeroPowers - Local AI Skills Framework</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; padding: 20px; color: #e2e8f0; line-height: 1.6; }
-        .container { max-width: 1100px; margin: 0 auto; }
-        header { text-align: center; padding: 50px 20px 30px; }
-        header h1 { font-size: 3.2em; margin-bottom: 10px; background: linear-gradient(to right, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
-        header p { font-size: 1.25em; color: #94a3b8; max-width: 700px; margin: 0 auto 20px; }
-        .badges { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
-        .badge { background: rgba(56, 189, 248, 0.15); color: #38bdf8; padding: 6px 14px; border-radius: 20px; font-size: 0.85em; font-weight: 600; border: 1px solid rgba(56, 189, 248, 0.3); }
-        .action-buttons { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin: 35px 0; }
-        .btn { padding: 12px 28px; border: none; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .btn-primary { background: #38bdf8; color: #0f172a; }
-        .btn-secondary { background: #334155; color: white; border: 1px solid #475569; }
-        .btn-success { background: #22c55e; color: white; }
-        .info-box { background: #1e293b; border-radius: 12px; padding: 30px; margin: 40px 0; border-left: 5px solid #38bdf8; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .info-box h3 { color: #38bdf8; margin-bottom: 20px; font-size: 1.4em; display: flex; align-items: center; gap: 10px; }
-        .info-box ol { margin-left: 20px; color: #cbd5e1; }
-        .info-box li { margin-bottom: 12px; }
-        .info-box code { background: #0f172a; padding: 3px 8px; border-radius: 6px; color: #38bdf8; font-family: 'Courier New', monospace; font-size: 0.95em; border: 1px solid #334155; }
-        .section-title { text-align: center; margin: 50px 0 30px; color: #f8fafc; font-size: 2em; font-weight: 700; }
-        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-bottom: 50px; }
-        .skill-card { background: #1e293b; border-radius: 12px; padding: 25px; border: 1px solid #334155; transition: all 0.3s ease; position: relative; overflow: hidden; }
-        .skill-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(to right, #38bdf8, #818cf8); opacity: 0; transition: opacity 0.3s ease; }
-        .skill-card:hover { transform: translateY(-5px); border-color: #38bdf8; box-shadow: 0 10px 25px rgba(56, 189, 248, 0.1); }
-        .skill-card:hover::before { opacity: 1; }
-        .skill-card h3 { color: #f8fafc; margin-bottom: 12px; font-size: 1.3em; display: flex; align-items: center; gap: 10px; }
-        .skill-card p { color: #94a3b8; margin-bottom: 20px; line-height: 1.6; font-size: 0.95em; }
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 8px 32px rgba(0, 0, 0, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --accent-red: #ff0033;
+            --accent-blue: #0A84FF;
+            --accent-purple: #BF5AF2;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; }
+
+        body {
+            background: #000;
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* HERO BANNER */
+        .hero-banner {
+            width: 100%;
+            max-height: 320px;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 2px solid var(--accent-red);
+            box-shadow: 0 0 60px rgba(255, 0, 51, 0.4), 0 0 120px rgba(255, 0, 51, 0.2);
+        }
+
+        .hero-banner img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+            object-position: center top;
+            filter: brightness(1.05) contrast(1.05);
+        }
+
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(to top, #000 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        /* Ambient Animated Background Blobs */
+        .ambient-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: #0a0a0a;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: float 20s infinite alternate ease-in-out;
+        }
+
+        .blob-1 { width: 600px; height: 600px; background: #ff0033; top: -10%; left: -10%; animation-duration: 25s; opacity: 0.3; }
+        .blob-2 { width: 500px; height: 500px; background: #f093fb; bottom: -10%; right: -10%; animation-duration: 30s; opacity: 0.3; }
+        .blob-3 { width: 400px; height: 400px; background: #00b4ff; top: 40%; left: 40%; animation-duration: 22s; opacity: 0.2; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 50px) scale(1.1); }
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; position: relative; z-index: 1; }
+
+        /* Liquid Glass Base Class */
+        .liquid-glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            box-shadow: var(--glass-shadow);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        header { 
+            text-align: center; 
+            padding: 50px 20px 30px;
+            position: relative;
+        }
+
+        .qwen-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 0, 51, 0.15);
+            color: #ff3366;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9em;
+            border: 1px solid rgba(255, 0, 51, 0.5);
+            box-shadow: 0 0 15px rgba(255, 0, 51, 0.4), inset 0 0 10px rgba(255, 0, 51, 0.1);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .qwen-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(255, 0, 51, 0.6), inset 0 0 15px rgba(255, 0, 51, 0.2);
+        }
+
+        header h1 {
+            font-size: 4em;
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #ff0033 0%, #ff6600 50%, #ff0033 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(255, 0, 51, 0.5);
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(255, 0, 51, 0.6)); }
+            to { filter: drop-shadow(0 0 30px rgba(255, 100, 0, 0.8)); }
+        }
+
+        header p {
+            font-size: 1.2em;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .badges { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+
+        .badge { 
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.85em;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .action-buttons { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin: 40px 0; }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-size: 1em;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary { background: rgba(255, 0, 51, 0.3); border-color: rgba(255, 0, 51, 0.5); }
+        .btn-primary:hover { background: rgba(255, 0, 51, 0.5); }
+        
+        .btn-success { background: rgba(48, 209, 88, 0.3); border-color: rgba(48, 209, 88, 0.5); }
+        .btn-success:hover { background: rgba(48, 209, 88, 0.5); }
+
+        .glass-card {
+            padding: 35px;
+            margin: 40px 0;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 12px 40px rgba(0,0,0,0.3);
+        }
+
+        .glass-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .glass-card ol { margin-left: 20px; color: var(--text-secondary); line-height: 1.8; }
+        .glass-card li { margin-bottom: 12px; }
+        
+        .glass-card code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.9em;
+            color: #ff6666;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .section-title {
+            text-align: center;
+            margin: 60px 0 40px;
+            font-size: 2em;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 60px;
+        }
+
+        .skill-card {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-6px) scale(1.01);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 15px 40px rgba(0,0,0,0.4);
+            border-color: rgba(255, 0, 51, 0.3);
+        }
+
+        .skill-card h3 { font-size: 1.3em; margin-bottom: 15px; font-weight: 600; }
+        .skill-card p { color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6; font-size: 0.95em; flex-grow: 1; }
+
         .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-        .tag { background: #0f172a; color: #818cf8; padding: 4px 10px; border-radius: 6px; font-size: 0.75em; font-weight: 600; border: 1px solid #1e293b; }
-        .card-btn { display: inline-block; padding: 8px 18px; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600; transition: all 0.2s ease; background: #334155; color: white; border: 1px solid #475569; }
-        .card-btn:hover { background: #38bdf8; color: #0f172a; border-color: #38bdf8; }
-        footer { text-align: center; padding: 40px 20px; margin-top: 40px; color: #64748b; font-size: 0.9em; border-top: 1px solid #334155; }
-        footer a { color: #38bdf8; text-decoration: none; transition: color 0.2s; }
-        footer a:hover { color: #818cf8; }
+        
+        .tag {
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.75em;
+            font-weight: 500;
+            background: rgba(255, 0, 51, 0.15);
+            border: 1px solid rgba(255, 0, 51, 0.3);
+            color: #ff6666;
+        }
+
+        .card-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 0.85em;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            transition: all 0.3s ease;
+            text-align: center;
+            align-self: flex-start;
+        }
+
+        .card-btn:hover {
+            background: rgba(255, 0, 51, 0.4);
+            border-color: rgba(255, 0, 51, 0.6);
+            transform: scale(1.05);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 40px;
+        }
+
+        footer a { color: #ff6666; text-decoration: none; transition: color 0.3s; }
+        footer a:hover { color: #ff0033; }
+
+        @media (max-width: 768px) {
+            .hero-banner { max-height: 180px; }
+            header h1 { font-size: 2.8em; }
+            .qwen-badge { top: 10px; right: 10px; padding: 8px 14px; font-size: 0.8em; }
+            .action-buttons { flex-direction: column; align-items: center; }
+            .btn { width: 100%; max-width: 300px; justify-content: center; }
+        }
     </style>
 </head>
 <body>
+    <!-- HERO BANNER -->
+    <div class="hero-banner">
+        <img src="assets/banner.png" alt="ZeroPowers Banner">
+    </div>
+
+    <div class="ambient-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
     <div class="container">
         <header>
+            <div class="qwen-badge">🦙 Qwen</div>
             <h1>⚡ ZeroPowers</h1>
             <p>Superpowers untuk AI Coding Assistant Lokal. Mengubah Cline/Roo Code + Ollama menjadi asisten yang efisien, aman, dan 100% offline.</p>
             <div class="badges">
@@ -56,11 +345,11 @@
 
         <div class="action-buttons">
             <a href="https://github.com/NurdinHidayatullohelghifari/zeropowers" target="_blank" class="btn btn-primary">🐙 Lihat di GitHub</a>
-            <a href="vscode://vscode.git/clone?url=https://github.com/NurdinHidayatullohelghifari/zeropowers" class="btn btn-secondary">📂 Clone di VS Code</a>
+            <a href="vscode://vscode.git/clone?url=https://github.com/NurdinHidayatullohelghifari/zeropowers" class="btn">📂 Clone di VS Code</a>
             <a href="https://ollama.com" target="_blank" class="btn btn-success">🦙 Download Ollama</a>
         </div>
 
-        <div class="info-box">
+        <div class="liquid-glass glass-card">
             <h3>📖 Quick Start (3 Menit)</h3>
             <ol>
                 <li>Install <strong>Ollama</strong> dan jalankan: <code>ollama run qwen2.5-coder:7b</code></li>
@@ -70,41 +359,69 @@
             </ol>
         </div>
 
-        <h2 class="section-title">✨ Skills Matrix (Dashboard Fitur)</h2>
+        <h2 class="section-title">✨ Skills Matrix</h2>
 
         <div class="skills-grid">
-            <div class="skill-card">
-                <h3>🎨 Multimodal Gen</h3>
-                <div class="tags"><span class="tag">Text-to-Speech</span><span class="tag">Text-to-Image</span><span class="tag">100% Free</span></div>
-                <p>Panduan lengkap generasi media lokal. Menggunakan tools seperti Piper, Stable Diffusion.cpp, dan FFmpeg tanpa layanan berbayar.</p>
+            <div class="liquid-glass skill-card">
+                <div>
+                    <h3>🎨 Multimodal Gen</h3>
+                    <div class="tags">
+                        <span class="tag">Text-to-Speech</span>
+                        <span class="tag">Text-to-Image</span>
+                        <span class="tag">100% Free</span>
+                    </div>
+                    <p>Panduan lengkap generasi media lokal. Menggunakan Piper, Stable Diffusion.cpp, dan FFmpeg tanpa layanan berbayar.</p>
+                </div>
                 <a href="https://github.com/NurdinHidayatullohelghifari/zeropowers/blob/main/skills/multimodal-generation.md" target="_blank" class="card-btn">📄 Lihat Skill</a>
             </div>
 
-            <div class="skill-card">
-                <h3>🛠️ Local Testing</h3>
-                <div class="tags"><span class="tag">Unit Test</span><span class="tag">Debugging</span><span class="tag">Offline</span></div>
-                <p>Panduan pembuatan unit test dan analisis error stack trace secara lokal tanpa mengirim kode sensitif ke cloud CI/CD.</p>
+            <div class="liquid-glass skill-card">
+                <div>
+                    <h3>🛠️ Local Testing</h3>
+                    <div class="tags">
+                        <span class="tag">Unit Test</span>
+                        <span class="tag">Debugging</span>
+                        <span class="tag">Offline</span>
+                    </div>
+                    <p>Panduan pembuatan unit test dan analisis error stack trace secara lokal tanpa mengirim kode sensitif ke cloud.</p>
+                </div>
                 <a href="https://github.com/NurdinHidayatullohelghifari/zeropowers/blob/main/skills/local-testing-debugging.md" target="_blank" class="card-btn">📄 Lihat Skill</a>
             </div>
 
-            <div class="skill-card">
-                <h3>🛡️ Offline Security</h3>
-                <div class="tags"><span class="tag">Vulnerability</span><span class="tag">Secrets Scan</span><span class="tag">SAST</span></div>
-                <p>Deteksi kerentanan keamanan dan hardcoded secrets menggunakan tools scanner open-source lokal seperti Gitleaks dan Semgrep.</p>
+            <div class="liquid-glass skill-card">
+                <div>
+                    <h3>🛡️ Offline Security</h3>
+                    <div class="tags">
+                        <span class="tag">Vulnerability</span>
+                        <span class="tag">Secrets Scan</span>
+                        <span class="tag">SAST</span>
+                    </div>
+                    <p>Deteksi kerentanan keamanan dan hardcoded secrets menggunakan Gitleaks dan Semgrep secara lokal.</p>
+                </div>
                 <a href="https://github.com/NurdinHidayatullohelghifari/zeropowers/blob/main/skills/offline-security-scanner.md" target="_blank" class="card-btn">📄 Lihat Skill</a>
             </div>
 
-            <div class="skill-card">
-                <h3>🌿 Smart Git</h3>
-                <div class="tags"><span class="tag">Conventional Commits</span><span class="tag">Merge Resolve</span></div>
-                <p>Standar generasi commit message yang deskriptif dan strategi resolusi merge conflict secara lokal dan efisien.</p>
+            <div class="liquid-glass skill-card">
+                <div>
+                    <h3>🌿 Smart Git</h3>
+                    <div class="tags">
+                        <span class="tag">Conventional Commits</span>
+                        <span class="tag">Merge Resolve</span>
+                    </div>
+                    <p>Standar generasi commit message yang deskriptif dan strategi resolusi merge conflict secara lokal.</p>
+                </div>
                 <a href="https://github.com/NurdinHidayatullohelghifari/zeropowers/blob/main/skills/smart-git-management.md" target="_blank" class="card-btn">📄 Lihat Skill</a>
             </div>
 
-            <div class="skill-card">
-                <h3>🧹 Auto-Refactor</h3>
-                <div class="tags"><span class="tag">Code Cleanup</span><span class="tag">Zero Behavioral Change</span></div>
-                <p>Panduan refactoring untuk meningkatkan keterbacaan dan mengurangi kompleksitas tanpa mengubah perilaku fungsional kode.</p>
+            <div class="liquid-glass skill-card">
+                <div>
+                    <h3>🧹 Auto-Refactor</h3>
+                    <div class="tags">
+                        <span class="tag">Code Cleanup</span>
+                        <span class="tag">Zero Behavioral Change</span>
+                    </div>
+                    <p>Panduan refactoring untuk meningkatkan keterbacaan dan mengurangi kompleksitas tanpa mengubah fungsi.</p>
+                </div>
                 <a href="https://github.com/NurdinHidayatullohelghifari/zeropowers/blob/main/skills/auto-refactoring-cleanup.md" target="_blank" class="card-btn">📄 Lihat Skill</a>
             </div>
         </div>
