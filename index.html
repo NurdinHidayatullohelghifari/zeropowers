@@ -31,11 +31,11 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
         }
 
-        /* Header Section */
+        /* Hero Section */
         .hero {
             text-align: center;
             padding: 40px 20px;
@@ -58,7 +58,7 @@
         /* Grid Layout untuk Skills */
         .skills-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 24px;
             margin-top: 30px;
         }
@@ -71,12 +71,13 @@
             padding: 24px;
             display: flex;
             flex-direction: column;
-            transition: transform 0.2s ease, border-color 0.2s ease;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         .skill-card:hover {
             transform: translateY(-4px);
             border-color: var(--accent-color);
+            box-shadow: 0 8px 24px rgba(88, 166, 255, 0.1);
         }
 
         .skill-header {
@@ -124,7 +125,7 @@
             font-size: 15px;
             color: var(--text-secondary);
             margin-bottom: 20px;
-            flex-grow: 1; /* Mendorong tombol ke bawah agar rata */
+            flex-grow: 1;
         }
 
         /* Tombol Link */
@@ -168,7 +169,7 @@
         <!-- Hero Section -->
         <div class="hero">
             <h1>⚡ ZeroPowers</h1>
-            <p>Kumpulan skill dan panduan untuk mengoptimalkan Agen AI Lokal. Hemat token, offline-first, dan 100% gratis.</p>
+            <p>Superpowers untuk AI Coding Assistant Lokal. Mengubah Cline/Roo Code + Ollama menjadi asisten yang efisien, aman, dan 100% offline.</p>
         </div>
 
         <!-- Grid Skills -->
@@ -184,9 +185,7 @@
                     <span class="badge">Token Efficiency</span>
                     <span class="badge">No Hallucination</span>
                 </div>
-                <p class="skill-description">
-                    Optimasi output untuk model AI lokal. Hemat token, ringkas, dan bebas halusinasi API cloud.
-                </p>
+                <p class="skill-description">Optimasi output untuk model AI lokal. Hemat token, ringkas, dan bebas halusinasi API cloud.</p>
                 <a href="skills/local-ai-efficiency.html" class="skill-link">📄 Lihat Skill →</a>
             </div>
 
@@ -200,9 +199,7 @@
                     <span class="badge">Memory Management</span>
                     <span class="badge">Auto-Summarize</span>
                 </div>
-                <p class="skill-description">
-                    Mencegah model kehabisan context window. Auto-summarize percakapan panjang dan jaga fokus agen.
-                </p>
+                <p class="skill-description">Mencegah model kehabisan context window. Auto-summarize percakapan panjang dan jaga fokus agen.</p>
                 <a href="skills/context-window-guard.html" class="skill-link">📄 Lihat Skill →</a>
             </div>
 
@@ -216,9 +213,7 @@
                     <span class="badge">No Internet</span>
                     <span class="badge">Local Tools</span>
                 </div>
-                <p class="skill-description">
-                    Panduan agen untuk selalu assume offline, tidak suggest cloud API, dan pakai tool lokal.
-                </p>
+                <p class="skill-description">Panduan agen untuk selalu assume offline, tidak suggest cloud API, dan pakai tool lokal.</p>
                 <a href="skills/offline-first.html" class="skill-link">📄 Lihat Skill →</a>
             </div>
 
@@ -233,14 +228,12 @@
                     <span class="badge">Text-to-Image</span>
                     <span class="badge free">100% Free</span>
                 </div>
-                <p class="skill-description">
-                    Panduan lengkap Text-to-Speech, Text-to-Image, dan lainnya. 100% lokal, open-source, dan gratis!
-                </p>
+                <p class="skill-description">Panduan lengkap Text-to-Speech, Text-to-Image, dan lainnya. 100% lokal, open-source, dan gratis!</p>
                 <a href="skills/multimodal-generation.html" class="skill-link">📄 Lihat Skill →</a>
             </div>
 
-            <!-- Skill 5: Text-to-Video Generation (BARU / GABUNGAN) -->
-            <div class="skill-card" style="border-color: var(--accent-color);">
+            <!-- Skill 5: Text-to-Video Generation -->
+            <div class="skill-card">
                 <div class="skill-header">
                     <span class="skill-icon">🎬</span>
                     <h3 class="skill-title">Text-to-Video Generation</h3>
@@ -250,10 +243,83 @@
                     <span class="badge">Open Source</span>
                     <span class="badge free">100% Free</span>
                 </div>
-                <p class="skill-description">
-                    Skill untuk menghasilkan video pendek dari prompt teks menggunakan model open-source (seperti Stable Video Diffusion) yang dijalankan 100% lokal di perangkat Anda.
-                </p>
+                <p class="skill-description">Skill untuk menghasilkan video pendek dari prompt teks menggunakan model open-source yang dijalankan 100% lokal.</p>
                 <a href="skills/text-to-video.html" class="skill-link">📄 Lihat Skill →</a>
+            </div>
+
+            <!-- Skill 6: Local RAG (BARU) -->
+            <div class="skill-card">
+                <div class="skill-header">
+                    <span class="skill-icon">🧠</span>
+                    <h3 class="skill-title">Local RAG</h3>
+                </div>
+                <div class="badges">
+                    <span class="badge">Local AI</span>
+                    <span class="badge">PDF/Word</span>
+                    <span class="badge free">100% Free</span>
+                </div>
+                <p class="skill-description">Chat dengan dokumen PDF/Word lokal. AI menjawab berdasarkan isi dokumen, 100% offline dan privat.</p>
+                <a href="skills/local-rag.html" class="skill-link">📄 Lihat Skill →</a>
+            </div>
+
+            <!-- Skill 7: Auto Documentation (BARU) -->
+            <div class="skill-card">
+                <div class="skill-header">
+                    <span class="skill-icon">📝</span>
+                    <h3 class="skill-title">Auto Documentation</h3>
+                </div>
+                <div class="badges">
+                    <span class="badge">Local AI</span>
+                    <span class="badge">Multi-Language</span>
+                    <span class="badge free">100% Free</span>
+                </div>
+                <p class="skill-description">Otomatis membuat dokumentasi dari kode program. Generate README, API docs, dan komentar kode.</p>
+                <a href="skills/auto-documentation.html" class="skill-link">📄 Lihat Skill →</a>
+            </div>
+
+            <!-- Skill 8: Smart Web Scraper (BARU) -->
+            <div class="skill-card">
+                <div class="skill-header">
+                    <span class="skill-icon">🌐</span>
+                    <h3 class="skill-title">Smart Web Scraper</h3>
+                </div>
+                <div class="badges">
+                    <span class="badge">Local AI</span>
+                    <span class="badge">No API</span>
+                    <span class="badge free">100% Free</span>
+                </div>
+                <p class="skill-description">Ambil data dari website dengan bahasa natural. Ekspor ke CSV/JSON/Excel. Bisa dijadwalkan otomatis.</p>
+                <a href="skills/smart-web-scraper.html" class="skill-link">📄 Lihat Skill →</a>
+            </div>
+
+            <!-- Skill 9: Local Database Manager (BARU) -->
+            <div class="skill-card">
+                <div class="skill-header">
+                    <span class="skill-icon">🗄️</span>
+                    <h3 class="skill-title">Local Database Manager</h3>
+                </div>
+                <div class="badges">
+                    <span class="badge">Local AI</span>
+                    <span class="badge">SQLite/PostgreSQL</span>
+                    <span class="badge free">100% Free</span>
+                </div>
+                <p class="skill-description">Kelola database lokal dengan bahasa natural. Tidak perlu hafal SQL — cukup tanya dalam bahasa Indonesia.</p>
+                <a href="skills/local-database.html" class="skill-link">📄 Lihat Skill →</a>
+            </div>
+
+            <!-- Skill 10: Voice Command Agent (BARU) -->
+            <div class="skill-card">
+                <div class="skill-header">
+                    <span class="skill-icon">🎙️</span>
+                    <h3 class="skill-title">Voice Command Agent</h3>
+                </div>
+                <div class="badges">
+                    <span class="badge">Local AI</span>
+                    <span class="badge">Whisper Offline</span>
+                    <span class="badge free">100% Free</span>
+                </div>
+                <p class="skill-description">Kontrol agen AI dengan suara secara offline. Menggunakan Whisper lokal untuk Speech-to-Text.</p>
+                <a href="skills/voice-command.html" class="skill-link">📄 Lihat Skill →</a>
             </div>
 
         </div>
