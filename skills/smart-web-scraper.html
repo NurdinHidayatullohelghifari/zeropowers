@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Web Scraper | ZeroPowers</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background-color: #0d1117; color: #c9d1d9; line-height: 1.6; padding: 20px; margin: 0; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .back-link { display: inline-block; color: #58a6ff; text-decoration: none; margin-bottom: 24px; font-weight: 500; }
+        .back-link:hover { text-decoration: underline; }
+        .skill-card { background-color: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 32px; }
+        .skill-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+        .skill-title { font-size: 28px; font-weight: 600; color: #ffffff; margin: 0; }
+        .badges { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .badge { background-color: rgba(88, 166, 255, 0.15); color: #58a6ff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid rgba(88, 166, 255, 0.3); }
+        .badge.free { background-color: rgba(35, 134, 54, 0.15); color: #3fb950; border-color: rgba(35, 134, 54, 0.3); }
+        h3 { color: #ffffff; border-bottom: 1px solid #30363d; padding-bottom: 8px; margin-top: 24px; }
+        ul { padding-left: 20px; color: #8b949e; }
+        li { margin-bottom: 8px; }
+        .code-block { background-color: #010409; border: 1px solid #30363d; border-radius: 8px; padding: 16px; overflow-x: auto; font-family: monospace; font-size: 14px; color: #e6edf3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">← Kembali ke Daftar Skill</a>
+        <div class="skill-card">
+            <div class="skill-header">
+                <span style="font-size: 40px;">🌐</span>
+                <h1 class="skill-title">Smart Web Scraper</h1>
+            </div>
+            <div class="badges">
+                <span class="badge">Local AI</span>
+                <span class="badge">No API Needed</span>
+                <span class="badge free">100% Free</span>
+                <span class="badge">Cron-Schedule</span>
+            </div>
+            <p>Skill ini memungkinkan agen AI mengambil data dari website secara otomatis menggunakan bahasa natural. Tidak perlu API, tidak perlu coding CSS selector — cukup deskripsikan data yang Anda inginkan, dan AI akan mengekstraknya sendiri.</p>
+            <h3>✨ Fitur Utama</h3>
+            <ul>
+                <li><strong>Natural Language Query:</strong> "Ambil semua judul artikel dan tanggal publish dari blog ini".</li>
+                <li><strong>Multi-Format Export:</strong> CSV, JSON, Excel, SQLite.</li>
+                <li><strong>Scheduler Lokal:</strong> Jadwalkan scraping otomatis (setiap jam/hari/minggu).</li>
+                <li><strong>Anti-Bot Bypass:</strong> Rotasi user-agent dan delay cerdas.</li>
+            </ul>
+            <h3>🛠️ Contoh Perintah ke Agen AI</h3>
+            <div class="code-block">
+"user": "Ambil daftar harga laptop dari website toko-online.com, simpan ke file laptop-harga.csv"
+"action": "smart_scrape"
+"parameters": {
+  "url": "https://toko-online.com/laptop",
+  "extract_fields": ["nama_produk", "harga", "spesifikasi"],
+  "output_file": "laptop-harga.csv",
+  "schedule": "daily"
+}
+            </div>
+            <h3>💻 Persyaratan Sistem</h3>
+            <ul>
+                <li>Python 3.10+ dengan library: <code>playwright</code>, <code>beautifulsoup4</code>.</li>
+                <li>Browser headless (Chromium) yang sudah terinstall.</li>
+                <li>Koneksi internet (untuk scraping, tapi AI-nya tetap lokal).</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

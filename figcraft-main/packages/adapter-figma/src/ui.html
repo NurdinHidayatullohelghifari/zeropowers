@@ -1,0 +1,2480 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    /* ─── CSS Custom Properties ─── */
+    :root {
+      --bg: #ffffff;
+      --surface: #f5f5f5;
+      --surface-hover: #ebebeb;
+      --border: #e6e6e6;
+      --text-primary: #333333;
+      --text-secondary: #595959;
+      --text-tertiary: #767676;
+      --accent: #0d99ff;
+      --accent-hover: #0b85e0;
+      --accent-bg: #e8f4fd;
+      --success: #14ae5c;
+      --success-bg: #e8f5e9;
+      --error: #f24822;
+      --error-bg: #fef0ed;
+      --warning: #ffcd29;
+      --warning-bg: #fff8e1;
+      --code-bg: #f0f0f0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #2c2c2c;
+        --surface: #383838;
+        --surface-hover: #444444;
+        --border: #4a4a4a;
+        --text-primary: #e8e8e8;
+        --text-secondary: #a3a3a3;
+        --text-tertiary: #8b8b8b;
+        --accent: #0d99ff;
+        --accent-hover: #3dabff;
+        --accent-bg: #1a3a4f;
+        --success: #14ae5c;
+        --success-bg: #1a3a2a;
+        --error: #f24822;
+        --error-bg: #3f2020;
+        --warning: #ffcd29;
+        --warning-bg: #3a3520;
+        --code-bg: #3a3a3a;
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #2c2c2c;
+      --surface: #383838;
+      --surface-hover: #444444;
+      --border: #4a4a4a;
+      --text-primary: #e8e8e8;
+      --text-secondary: #a3a3a3;
+      --text-tertiary: #8b8b8b;
+      --accent: #0d99ff;
+      --accent-hover: #3dabff;
+      --accent-bg: #1a3a4f;
+      --success: #14ae5c;
+      --success-bg: #1a3a2a;
+      --error: #f24822;
+      --error-bg: #3f2020;
+      --warning: #ffcd29;
+      --warning-bg: #3a3520;
+      --code-bg: #3a3a3a;
+    }
+
+    /* ─── Reset & Base ─── */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 12px;
+      color: var(--text-primary);
+      background: var(--bg);
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── Header ─── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 12px 12px;
+      flex-shrink: 0;
+    }
+    .header h1 {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+    }
+    .channel-bar {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 12px 8px;
+      flex-shrink: 0;
+    }
+    .channel-bar .input,
+    .channel-bar .select,
+    .channel-bar .btn {
+      height: 32px;
+      border-radius: 8px;
+    }
+    .channel-bar .input,
+    .channel-bar .select {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* ─── Status Button ─── */
+    .status-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .status-btn.connected { background: var(--bg); color: var(--success); border-color: var(--border); }
+    .status-btn.connected .status-dot { background: var(--success); }
+    .status-btn.connected:hover { background: var(--surface); }
+    .status-btn.disconnected { background: var(--bg); color: var(--text-primary); border-color: var(--border); }
+    .status-btn.disconnected .status-dot { background: var(--error); }
+    .status-btn.disconnected:hover { background: var(--surface); }
+    .status-btn.connecting { background: var(--bg); color: var(--text-secondary); border-color: var(--border); }
+    .status-btn.connecting .status-dot {
+      background: var(--warning);
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ─── Tab Bar ─── */
+    #library-bar {
+      padding: 0 12px 8px;
+    }
+    .tab-bar {
+      display: flex;
+      padding: 8px 12px 0;
+      gap: 16px;
+      flex-shrink: 0;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .tab-btn {
+      padding: 8px 2px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+      margin-bottom: -1px;
+    }
+    .tab-btn:hover { color: var(--text-primary); }
+    .tab-btn.active {
+      color: var(--text-primary);
+      border-bottom-color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* ─── Tab Content ─── */
+    .tab-pane {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .tab-pane.active {
+      display: flex;
+    }
+
+    /* ─── Activity Tab ─── */
+    .activity-feed {
+      flex: 1;
+      overflow-y: auto;
+      font-family: 'SF Mono', 'Menlo', monospace;
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      padding: 8px 12px;
+    }
+    .activity-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px 0;
+      flex-shrink: 0;
+    }
+    .activity-clear {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      border: none;
+      background: none;
+      padding: 4px 4px;
+      border-radius: 4px;
+      transition: color 0.1s, background 0.1s;
+    }
+    .activity-clear:hover { color: var(--text-primary); background: var(--surface); }
+    .activity-badge {
+      font-size: 10px;
+      color: var(--text-tertiary);
+    }
+    .log-entry {
+      margin-bottom: 2px;
+      padding: 2px 0;
+    }
+    .log-entry .time { color: var(--text-tertiary); }
+    .log-entry .arrow { font-weight: 600; }
+    .log-entry .arrow.in { color: var(--accent); }
+    .log-entry .arrow.out { color: var(--success); }
+    .log-entry.error .arrow { color: var(--error); }
+    .log-entry.error .msg { color: var(--error); }
+    .log-entry.success .msg { color: var(--success); }
+    .log-entry.info .msg { color: var(--text-secondary); }
+
+    /* ─── Empty State ─── */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      gap: 8px;
+      color: var(--text-tertiary);
+      font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 11px;
+      padding: 40px 24px;
+    }
+    .empty-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-tertiary);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* ─── Settings Tab ─── */
+    .settings-content {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      overflow-y: auto;
+      flex: 1;
+      min-height: 0;
+    }
+    .setting-group { display: flex; flex-direction: column; gap: 8px; }
+    .setting-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .setting-desc {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      line-height: 1.4;
+      margin-top: 0;
+    }
+
+    /* ─── Mode Toggle ─── */
+    .mode-toggle {
+      display: flex;
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 2px;
+      gap: 2px;
+    }
+    .mode-toggle button {
+      flex: 1;
+      height: 28px;
+      padding: 0 12px;
+      font-size: 12px;
+      font-weight: 500;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+    }
+    .mode-toggle button.active {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .mode-toggle button:not(.active):hover { background: var(--surface-hover); }
+    .mode-desc {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      line-height: 1.4;
+      transition: opacity 0.2s;
+    }
+
+    /* ─── Shared Input Styles ─── */
+    .input {
+      width: 100%;
+      height: 32px;
+      font-family: 'SF Mono', 'Menlo', monospace;
+      font-size: 11px;
+      padding: 0 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      outline: none;
+      color: var(--text-primary);
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .input:focus { border-color: #111; background: var(--bg); }
+    .input.error { border-color: var(--error); }
+
+    .input-row {
+      display: flex;
+      gap: 4px;
+    }
+    .input-row .input { flex: 1; min-width: 0; }
+
+    .btn {
+      height: 32px;
+      padding: 0 12px;
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text-primary);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s, color 0.2s, border-color 0.2s, opacity 0.3s;
+    }
+    .btn:hover { background: var(--surface-hover); }
+    .btn:disabled { opacity: 0.4; cursor: default; }
+    .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn.primary:hover { background: var(--accent-hover); }
+    .btn.success { background: var(--success); color: #fff; border-color: var(--success); opacity: 1; }
+    .btn.fade-out { opacity: 0; }
+
+    .select {
+      width: 100%;
+      height: 32px;
+      font-size: 11px;
+      padding: 0 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      outline: none;
+      color: var(--text-primary);
+      transition: border-color 0.15s;
+    }
+    .select:focus { border-color: #111; }
+
+    .hint { font-size: 10px; color: var(--text-tertiary); margin-top: 2px; }
+    .hint.valid { color: var(--success); }
+    .hint.invalid { color: var(--error); }
+
+    /* ─── Library Picker ─── */
+    .library-trigger {
+      width: 100%;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4px 0 12px;
+      font-size: 11px;
+      font-weight: 500;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .library-trigger:hover { border-color: var(--text-tertiary); }
+    .library-trigger .chevron {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      color: var(--text-tertiary);
+      transition: transform 0.15s;
+    }
+    .library-trigger.open .chevron { transform: rotate(180deg); }
+    .library-trigger .label-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .library-trigger .label-text.placeholder { color: var(--text-tertiary); }
+
+    .library-popup-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 99;
+    }
+    .library-popup-overlay.open { display: block; }
+    .library-popup {
+      display: none;
+      position: absolute;
+      top: 100%;
+      margin-top: 4px;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.08);
+      padding: 4px;
+      max-height: 240px;
+      overflow-y: auto;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .library-popup.open { display: flex; }
+
+    .library-popup-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      font-size: 11px;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.1s, color 0.1s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .library-popup-item:hover { background: var(--surface); color: var(--text-primary); }
+    .library-popup-item.active {
+      background: var(--surface);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .library-popup-item.active:hover { background: var(--border); }
+    .library-popup-item .check {
+      width: 16px;
+      flex-shrink: 0;
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .library-popup-separator {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 8px 12px 4px;
+      pointer-events: none;
+    }
+    .library-popup-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 4px 8px;
+    }
+    .library-popup-add-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px;
+    }
+    .library-popup-add-row .input {
+      flex: 1;
+      min-width: 0;
+      height: 32px;
+      font-size: 10px;
+      border-radius: 8px;
+    }
+    .library-popup-add-btn {
+      height: 32px;
+      width: 32px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .library-popup-add-btn:hover { background: var(--accent-hover); }
+    .library-popup-add-btn:disabled { opacity: 0.4; cursor: default; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .library-popup-add-btn.loading {
+      pointer-events: none;
+      position: relative;
+      color: transparent;
+    }
+    .library-popup-add-btn.loading::after {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    #lint-run-btn.loading {
+      pointer-events: none;
+      position: relative;
+      color: transparent;
+    }
+    #lint-run-btn.loading::after {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    .library-popup-item { position: relative; }
+    .library-popup-item .delete-btn {
+      display: none;
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
+      color: var(--text-tertiary);
+      font-size: 16px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+    }
+    .library-popup-item:hover .delete-btn { display: flex; }
+    .library-popup-item .delete-btn:hover { background: var(--error); color: #fff; }
+    .library-popup-error {
+      font-size: 10px;
+      color: var(--error);
+      padding: 0 12px 4px;
+    }
+
+    /* ─── Help Tab ─── */
+    .help-content {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+      flex: 1;
+      min-height: 0;
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+    .help-section-title {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+    .help-steps { list-style: none; counter-reset: step; }
+    .help-steps li {
+      counter-increment: step;
+      padding-left: 28px;
+      position: relative;
+      margin-bottom: 8px;
+    }
+    .help-steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      background: var(--surface);
+      color: var(--text-primary);
+      border-radius: 50%;
+      font-size: 10px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    .code-block {
+      position: relative;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'SF Mono', 'Menlo', monospace;
+      font-size: 10px;
+      line-height: 1.5;
+      white-space: pre;
+      overflow-x: auto;
+      color: var(--text-primary);
+    }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 10px;
+      padding: 4px 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: background 0.1s;
+    }
+    .copy-btn:hover { background: var(--surface-hover); }
+    .conn-info {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 4px 8px;
+      font-size: 11px;
+    }
+    .conn-info-label { color: var(--text-tertiary); }
+    .conn-info-value { color: var(--text-primary); font-family: 'SF Mono', 'Menlo', monospace; }
+
+
+    .hidden { display: none !important; }
+
+    /* ─── Connection Diagnostic Banner ─── */
+    .conn-banner {
+      display: none;
+      margin: 0 12px 8px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      line-height: 1.5;
+      animation: bannerSlideIn 0.2s ease-out;
+    }
+    @keyframes bannerSlideIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .conn-banner.visible { display: block; }
+    .conn-banner.warn {
+      background: var(--warning-bg);
+      color: var(--text-primary);
+    }
+    .conn-banner.error {
+      background: var(--error-bg);
+      color: var(--text-primary);
+    }
+    .conn-banner-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .conn-banner-hint {
+      color: var(--text-secondary);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ─── Collapse Toggle ─── */
+    .collapse-btn {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 4px;
+      background: transparent;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      flex-shrink: 0;
+      padding: 0;
+    }
+    .collapse-btn:hover { background: var(--surface); border-color: rgba(0,0,0,0.12); }
+    .collapse-btn svg {
+      transition: transform 0.2s;
+    }
+    /* Expanded: arrow points up (rotate 180°); Collapsed: arrow points down (default) */
+    .collapse-btn svg { transform: rotate(180deg); }
+    body.collapsed .collapse-btn svg { transform: rotate(0deg); }
+    .collapsible { transition: opacity 0.15s; }
+    body.collapsed .collapsible { display: none !important; }
+
+    /* ─── Lint Panel ─── */
+    .lint-content {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow-y: auto;
+      flex: 1;
+      min-height: 0;
+    }
+    .lint-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .lint-actions .btn { flex: 1; }
+
+    /* Score card — compact summary bar */
+    .lint-score-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .lint-score-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
+    .lint-score-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .lint-score-circle.good { background: var(--success); }
+    .lint-score-circle.warn { background: var(--warning); color: #1a1a00; }
+    .lint-score-circle.bad { background: var(--error); }
+    .lint-score-detail {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .lint-score-stats {
+      display: flex;
+      gap: 12px;
+    }
+    .lint-stat {
+      display: flex;
+      align-items: baseline;
+      gap: 3px;
+    }
+    .lint-stat-value {
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .lint-stat-value.pass { color: var(--success); }
+    .lint-stat-value.fail { color: var(--error); }
+    .lint-stat-value.fix { color: var(--accent); }
+    .lint-stat-label {
+      font-size: 10px;
+      color: var(--text-tertiary);
+    }
+    .lint-progress {
+      height: 4px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      width: 100%;
+    }
+    .lint-progress-bar {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    .lint-scope {
+      font-size: 12px;
+      color: var(--text-primary);
+      text-align: left;
+      padding: 4px 0 2px;
+    }
+    .lint-all-pass {
+      text-align: center;
+      padding: 12px 0;
+      color: var(--success);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* Category list */
+    .lint-categories {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .lint-cat-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 8px;
+      background: var(--surface);
+      border-radius: 8px;
+      font-size: 12px;
+      transition: background 0.1s;
+    }
+    .lint-cat-row:hover { background: var(--surface-hover); }
+    .lint-cat-name {
+      color: var(--text-primary);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+    .lint-cat-count {
+      font-size: 10px;
+      font-weight: 600;
+      min-width: 20px;
+      text-align: center;
+      padding: 1px 6px;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--error);
+    }
+    .lint-cat-count.zero {
+      background: transparent;
+      color: var(--success);
+    }
+    .lint-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      gap: 8px;
+      color: var(--text-tertiary);
+      font-size: 11px;
+      padding: 32px 24px;
+    }
+    .lint-error-banner {
+      display: none;
+      font-size: 11px;
+      color: var(--error);
+      background: var(--error-bg);
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+    .lint-result-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* ─── Lint category expand/collapse ─── */
+    .lint-cat-group { display: flex; flex-direction: column; gap: 0; }
+    .lint-cat-row { cursor: pointer; user-select: none; }
+    .lint-cat-row .chevron {
+      font-size: 8px;
+      color: var(--text-tertiary);
+      margin-right: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 12px;
+      transition: transform 0.15s;
+    }
+    .lint-cat-row:hover .chevron { color: var(--text-secondary); }
+    .lint-cat-row.expanded .chevron { transform: rotate(90deg); }
+    .lint-cat-actions {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .lint-annotate-btn {
+      font-size: 12px;
+      height: 24px;
+      padding: 0 8px;
+      border: none;
+      border-radius: 4px;
+      background: var(--bg);
+      color: var(--text-primary);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.1s, color 0.1s, border-color 0.1s;
+    }
+    .lint-annotate-btn:hover { background: #d4d4d4; color: var(--text-primary); }
+    .lint-annotate-btn.active {
+      background: var(--bg);
+      color: var(--error);
+      border-color: var(--error);
+    }
+    .lint-annotate-btn.active:hover { background: #d4d4d4; color: var(--error); }
+    .lint-node-list {
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      padding: 4px 0 2px;
+      margin-left: 14px;
+      border-left: 2px solid var(--border);
+    }
+    .lint-node-list.open { display: flex; }
+    .lint-node-list {
+      border-radius: 0 8px 8px 0;
+    }
+    .lint-node-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      border-radius: 0 6px 6px 0;
+      transition: background 0.1s;
+    }
+    .lint-node-item:hover { background: var(--surface-hover); }
+    .lint-node-name {
+      color: var(--text-primary);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .lint-node-name .icon { font-size: 8px; color: var(--text-tertiary); }
+    .lint-node-suggestion {
+      color: var(--text-tertiary);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    .lint-node-actions {
+      display: none;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 4px 0 6px;
+    }
+    .lint-node-actions.open { display: flex; }
+    .lint-clear-annotations-bar {
+      display: none;
+      padding: 0 0 8px;
+    }
+    .lint-clear-annotations-bar.visible { display: flex; }
+    .lint-clear-annotations-btn {
+      font-size: 12px;
+      height: 24px;
+      padding: 0 8px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      transition: background 0.1s, color 0.1s;
+    }
+    .lint-clear-annotations-btn:hover { background: var(--error-bg); color: var(--error); }
+  </style>
+</head>
+<body>
+  <!-- ─── Header ─── -->
+  <div class="header">
+    <h1 data-i18n="header.channel">Channel</h1>
+    <button id="collapse-btn" class="collapse-btn" title="Collapse" type="button"><svg viewBox="0 0 14 14" width="14" height="14"><path d="M3.17 5.77L7 9.6l3.83-3.83" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
+  </div>
+  <div class="channel-bar collapsible" style="position:relative">
+    <button id="channel-trigger" class="library-trigger" type="button">
+      <span class="label-text" id="channel-trigger-label">design-1</span>
+      <span class="chevron"><svg viewBox="0 0 14 14" width="14" height="14"><path d="M3.17 5.77L7 9.6l3.83-3.83" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>
+    </button>
+    <div id="channel-popup-overlay" class="library-popup-overlay"></div>
+    <div id="channel-popup" class="library-popup">
+      <button class="library-popup-item active" data-channel="design-1" type="button"><span class="check">✓</span>design-1</button>
+      <button class="library-popup-item" data-channel="design-2" type="button"><span class="check"></span>design-2</button>
+      <button class="library-popup-item" data-channel="design-3" type="button"><span class="check"></span>design-3</button>
+      <button class="library-popup-item" data-channel="design-4" type="button"><span class="check"></span>design-4</button>
+      <button class="library-popup-item" data-channel="design-5" type="button"><span class="check"></span>design-5</button>
+    </div>
+    <button id="connect-btn" class="btn status-btn disconnected" type="button"><span class="status-dot"></span><span class="sr-only" id="status-sr">Disconnected</span><span id="status-text">Connect</span></button>
+  </div>
+  <div class="channel-bar collapsible" id="library-bar" style="position:relative">
+    <button id="library-trigger" class="library-trigger" type="button">
+      <span class="label-text placeholder" id="library-trigger-label">None</span>
+      <span class="chevron"><svg viewBox="0 0 14 14" width="14" height="14"><path d="M3.17 5.77L7 9.6l3.83-3.83" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>
+    </button>
+    <div id="library-popup-overlay" class="library-popup-overlay"></div>
+    <div id="library-popup" class="library-popup"></div>
+  </div>
+
+  <!-- ─── Connection Diagnostic Banner ─── -->
+  <div class="conn-banner collapsible" id="conn-banner" role="status">
+    <div class="conn-banner-title" id="conn-banner-title"></div>
+    <div class="conn-banner-hint" id="conn-banner-hint"></div>
+  </div>
+
+  <!-- ─── Tab Bar ─── -->
+  <div class="tab-bar collapsible" role="tablist">
+    <button class="tab-btn active" data-tab="activity" data-i18n="tab.activity" role="tab" id="tab-activity" aria-controls="panel-activity" aria-selected="true" type="button">Activity</button>
+    <button class="tab-btn" data-tab="lint" data-i18n="tab.lint" role="tab" id="tab-lint" aria-controls="panel-lint" aria-selected="false" type="button">Lint</button>
+    <button class="tab-btn" data-tab="settings" data-i18n="tab.settings" role="tab" id="tab-settings" aria-controls="panel-settings" aria-selected="false" type="button">Settings</button>
+  </div>
+
+  <!-- ─── Activity Tab ─── -->
+  <div class="tab-pane active collapsible" data-tab-content="activity" role="tabpanel" id="panel-activity" aria-labelledby="tab-activity">
+    <div class="activity-header">
+      <span class="activity-badge" id="activity-count"></span>
+      <button class="activity-clear" id="log-clear" title="Clear activity" type="button">Clear</button>
+    </div>
+    <div class="activity-feed" id="log">
+      <div class="empty-state" id="empty-state">
+        <div class="empty-dot"></div>
+        <span data-i18n="activity.empty">Waiting for MCP commands...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Lint Tab ─── -->
+  <div class="tab-pane collapsible" data-tab-content="lint" role="tabpanel" id="panel-lint" aria-labelledby="tab-lint">
+    <div class="lint-content">
+      <div class="lint-actions">
+        <button class="btn primary" id="lint-run-btn" data-i18n="lint.run" type="button">Run Lint</button>
+        <button class="btn" id="lint-fix-btn" disabled data-i18n="lint.fix" type="button">Auto Fix</button>
+      </div>
+      <div class="lint-error-banner" id="lint-error-banner" role="alert"></div>
+      <div id="lint-result" class="lint-result-container" style="display:none">
+        <div class="lint-scope" id="lint-scope"></div>
+        <div class="lint-clear-annotations-bar" id="lint-clear-bar">
+          <button class="lint-clear-annotations-btn" id="lint-clear-annotations-btn" type="button">✕ Clear canvas annotations</button>
+        </div>
+        <div id="lint-score-card-area"></div>
+        <div class="lint-categories" id="lint-categories"></div>
+      </div>
+      <div class="lint-empty" id="lint-empty">
+        <span data-i18n="lint.empty">Click "Run Lint" to check the current page</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Settings Tab ─── -->
+  <div class="tab-pane collapsible" data-tab-content="settings" role="tabpanel" id="panel-settings" aria-labelledby="tab-settings">
+    <div class="settings-content">
+      <!-- Mode -->
+      <div class="setting-group">
+        <div class="setting-label" data-i18n="spec.mode">Mode</div>
+        <div class="mode-toggle">
+          <button id="mode-library" class="active" data-i18n="spec.mode.library" type="button">Library</button>
+          <button id="mode-spec" data-i18n="spec.mode.spec" type="button">Spec</button>
+        </div>
+        <div class="mode-desc" id="mode-desc">Check if designs use shared library tokens</div>
+      </div>
+
+      <!-- API Token -->
+      <div class="setting-group">
+        <div class="setting-label" data-i18n="spec.apitoken">API Token</div>
+        <div class="input-row">
+          <input id="token-input" class="input" type="password" placeholder="figd_xxx">
+          <button id="token-save-btn" class="btn" data-i18n="spec.save" type="button">Save</button>
+        </div>
+        <div class="hint" data-i18n="spec.token.hint">Figma Settings > Personal access tokens</div>
+      </div>
+
+      <!-- Language -->
+      <div class="setting-group">
+        <div class="setting-label" data-i18n="settings.language">Language</div>
+        <div class="mode-toggle">
+          <button id="lang-en" class="active" type="button">EN</button>
+          <button id="lang-zh" type="button">中文</button>
+        </div>
+      </div>
+
+      <hr style="border:none;border-top:1px solid var(--border);margin:4px 0">
+
+      <div>
+        <div class="help-section-title" data-i18n="settings.quickstart">QUICK START</div>
+        <ol class="help-steps">
+          <li data-i18n="settings.step1">Add FigCraft to your IDE's MCP config</li>
+          <li data-i18n="settings.step2">Open this plugin in Figma</li>
+          <li data-i18n="settings.step3">Both sides auto-connect via the relay</li>
+        </ol>
+      </div>
+
+      <div>
+        <div class="help-section-title" data-i18n="settings.mcpconfig">MCP CONFIG</div>
+        <div style="position:relative">
+          <div class="code-block" id="mcp-config">{
+  "mcpServers": {
+    "figcraft": {
+      "command": "npx",
+      "args": ["figcraft"]
+    }
+  }
+}</div>
+          <button class="copy-btn" id="copy-config" data-i18n="settings.copy" type="button">Copy</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="help-section-title" data-i18n="settings.conninfo">CONNECTION INFO</div>
+        <div class="conn-info">
+          <span class="conn-info-label" data-i18n="settings.status">Status</span>
+          <span class="conn-info-value" id="info-status">Disconnected</span>
+          <span class="conn-info-label" data-i18n="settings.port">Port</span>
+          <span class="conn-info-value" id="info-port">--</span>
+          <span class="conn-info-label" data-i18n="settings.channel">Channel</span>
+          <span class="conn-info-value" id="info-channel">figcraft</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    // ─── State ───
+    const DEFAULT_CHANNEL = 'design-1';
+    let channelId = DEFAULT_CHANNEL;
+    let ws = null;
+    let reconnectTimer = null;
+    let connected = false;
+    let currentMode = 'library';
+    let selectedLibrary = null;
+    let savedApiToken = '';
+    let libraryEntries = {};  // { fileKey: { name, url } } — synced from plugin sandbox
+    let pendingNameRefresh = {};  // { fileKey: oldName } — tracks in-flight name refresh requests
+    let logCount = 0;
+    let lastBannerReason = null; // Track current banner reason for locale re-apply
+    let uiCollapsed = false;
+    const EXPANDED_HEIGHT = 520;
+    const COLLAPSED_HEIGHT = 48;
+
+    // ─── Pending response queue ───
+    // When WS disconnects while sandbox is processing a request,
+    // queue responses and flush when reconnected (within 10s TTL).
+    var pendingResponses = [];
+    var PENDING_RESPONSE_TTL = 10000; // 10s — discard stale responses
+
+    function queueResponse(payload) {
+      pendingResponses.push({ payload: payload, ts: Date.now() });
+    }
+
+    function flushPendingResponses() {
+      if (!ws || ws.readyState !== WebSocket.OPEN) return;
+      var now = Date.now();
+      var kept = [];
+      for (var i = 0; i < pendingResponses.length; i++) {
+        var entry = pendingResponses[i];
+        if (now - entry.ts > PENDING_RESPONSE_TTL) {
+          log('\u2192 stale response discarded (age=' + (now - entry.ts) + 'ms)', 'error');
+          continue;
+        }
+        try {
+          ws.send(entry.payload);
+          log('\u2192 queued response flushed', 'success');
+        } catch (e) {
+          log('\u2192 flush failed: ' + e.message, 'error');
+          kept.push(entry);
+        }
+      }
+      pendingResponses = kept;
+    }
+
+    // ─── i18n ───
+    let currentLang = 'en';
+    const TRANSLATIONS = {
+      en: {
+        'tab.activity': 'Activity', 'tab.lint': 'Lint', 'tab.spec': 'Spec Setup', 'tab.settings': 'Settings',
+        'header.channel': 'Channel',
+        'btn.connect': 'Connect', 'btn.connected': 'Connected', 'btn.connecting': 'Connecting...',
+        'activity.empty': 'Waiting for MCP commands...',
+        'spec.mode': 'Mode', 'spec.mode.library': 'Library', 'spec.mode.spec': 'Spec',
+        'spec.library': 'Library', 'spec.apitoken': 'API Token', 'spec.save': 'Save',
+        'spec.token.hint': 'Figma Settings > Personal access tokens',
+        'spec.library.placeholder': 'Paste library URL...',
+        'lint.run': 'Run Lint', 'lint.fix': 'Auto Fix', 'lint.empty': 'Click "Run Lint" to check the current page',
+        'lint.passed': 'Passed', 'lint.violations': 'Violations', 'lint.fixable': 'Fixable',
+        'lint.running': 'Checking...', 'lint.fixing': 'Fixing...',
+        'lint.score': 'Score',
+        'lint.annotate': 'Mark', 'lint.annotated': '✓ Done',
+        'lint.removeAnnotation': '✕ Remove',
+        'lint.clearAnnotations': '✕ Clear annotations (selection or page)',
+        'lint.annotateTitle': 'Annotate on canvas',
+        'settings.language': 'Language',
+        'settings.quickstart': 'QUICK START',
+        'settings.step1': "Add FigCraft to your IDE's MCP config",
+        'settings.step2': 'Open this plugin in Figma',
+        'settings.step3': 'Both sides auto-connect via the relay',
+        'settings.mcpconfig': 'MCP CONFIG', 'settings.copy': 'Copy',
+        'settings.conninfo': 'CONNECTION INFO',
+        'settings.status': 'Status', 'settings.port': 'Port', 'settings.channel': 'Channel',
+        'status.sr.connected': 'Connected', 'status.sr.connecting': 'Connecting', 'status.sr.disconnected': 'Disconnected',
+        'lint.autofix.disabled.notconnected': 'Connect to relay first',
+        'lint.autofix.disabled.noviolations': 'No fixable violations found',
+        'lint.fix.success': 'Fixed {0} violation(s)',
+        'lint.fix.partial': 'Fixed {0}, failed {1} — {2}',
+        'lint.fix.allfailed': 'Fix failed — {0}',
+        'error.notconnected.lint': 'Connect to relay first to run lint checks.',
+        'error.relay.unavailable': 'Cannot connect to relay. Make sure your IDE has FigCraft running.',
+        'error.relay.suggestion': 'Try restarting your IDE or check if another process is using the port.',
+        'status.retrying': 'Retrying automatically...',
+        'banner.relay.title': 'Cannot connect to relay',
+        'banner.relay.hint': 'No relay found on ports 3055–3060. Ensure FigCraft MCP is running in your IDE.',
+        'banner.relay.hint.persistent': 'Still no relay after multiple retries. Try restarting FigCraft MCP server in your IDE (MCP Servers → figcraft → Restart).',
+        'banner.connecting.title': 'Connecting...',
+        'banner.connecting.hint': 'Scanning ports 3055–3060 for relay server.',
+        'banner.retrying.title': 'Connection lost',
+        'banner.retrying.hint': 'Retrying automatically. Check that your IDE is running.',
+      },
+      zh: {
+        'tab.activity': '日志', 'tab.lint': '设计审查', 'tab.spec': '规范配置', 'tab.settings': '设置',
+        'header.channel': '频道',
+        'btn.connect': '连接', 'btn.connected': '已连接', 'btn.connecting': '连接中...',
+        'activity.empty': '等待 MCP 命令...',
+        'spec.mode': '模式', 'spec.mode.library': '共享库', 'spec.mode.spec': '规范文件',
+        'spec.library': '组件库', 'spec.apitoken': 'API Token', 'spec.save': '保存',
+        'spec.token.hint': 'Figma 设置 > 个人访问令牌',
+        'spec.library.placeholder': '粘贴组件库 URL...',
+        'lint.run': '运行审查', 'lint.fix': '自动修复', 'lint.empty': '点击「运行审查」审查当前页面',
+        'lint.passed': '通过', 'lint.violations': '问题', 'lint.fixable': '可自动修复',
+        'lint.running': '审查中...', 'lint.fixing': '修复中...',
+        'lint.score': '评分',
+        'lint.annotate': '标注', 'lint.annotated': '✓ 已标注',
+        'lint.removeAnnotation': '✕ 移除',
+        'lint.clearAnnotations': '✕ 清除标注（选中项或本页）',
+        'lint.annotateTitle': '在画布上标注',
+        'settings.language': '语言',
+        'settings.quickstart': '快速开始',
+        'settings.step1': '在 IDE 的 MCP 配置中添加 FigCraft',
+        'settings.step2': '在 Figma 中打开此插件',
+        'settings.step3': '两端通过中继自动连接',
+        'settings.mcpconfig': 'MCP 配置', 'settings.copy': '复制',
+        'settings.conninfo': '连接信息',
+        'settings.status': '状态', 'settings.port': '端口', 'settings.channel': '频道',
+        'status.sr.connected': '已连接', 'status.sr.connecting': '连接中', 'status.sr.disconnected': '未连接',
+        'lint.autofix.disabled.notconnected': '请先连接中继服务',
+        'lint.autofix.disabled.noviolations': '没有可自动修复的问题',
+        'lint.fix.success': '已修复 {0} 个问题',
+        'lint.fix.partial': '已修复 {0} 个，失败 {1} 个 — {2}',
+        'lint.fix.allfailed': '修复失败 — {0}',
+        'error.notconnected.lint': '请先连接中继服务后再运行审查。',
+        'error.relay.unavailable': '无法连接到中继服务，请确认 IDE 已启动 FigCraft。',
+        'error.relay.suggestion': '请尝试重启 IDE，或检查端口是否被占用。',
+        'status.retrying': '正在自动重试...',
+        'banner.relay.title': '无法连接中继',
+        'banner.relay.hint': '在端口 3055–3060 上未找到中继服务。请确认 IDE 中 FigCraft MCP 正在运行。',
+        'banner.relay.hint.persistent': '多次重试仍无法连接。请在 IDE 中重启 FigCraft MCP 服务（MCP Servers → figcraft → 重启）。',
+        'banner.connecting.title': '连接中...',
+        'banner.connecting.hint': '正在扫描端口 3055–3060 寻找中继服务。',
+        'banner.retrying.title': '连接已断开',
+        'banner.retrying.hint': '正在自动重试，请检查 IDE 是否在运行。',
+      }
+    };
+    // Designer-friendly rule display names
+    const RULE_LABELS = {
+      en: {
+        'spec-color': 'Color not from tokens',
+        'spec-typography': 'Text style not from tokens',
+        'spec-border-radius': 'Corner radius not from tokens',
+        'hardcoded-token': 'Hardcoded value (no variable)',
+        'no-text-style': 'Missing text style',
+        'wcag-contrast': 'Low contrast (accessibility)',
+        'wcag-target-size': 'Tap target too small',
+        'wcag-text-size': 'Text too small to read',
+        'wcag-line-height': 'Line height causes overlap',
+        'empty-container': 'Empty frame / group',
+        'max-nesting-depth': 'Too deeply nested',
+        'default-name': 'Default layer name',
+        'component-bindings': 'Unused component property',
+      },
+      zh: {
+        'spec-color': '颜色未使用 Token',
+        'spec-typography': '文字样式未使用 Token',
+        'spec-border-radius': '圆角未使用 Token',
+        'hardcoded-token': '硬编码值（未绑定变量）',
+        'no-text-style': '缺少文字样式',
+        'wcag-contrast': '对比度不足（无障碍）',
+        'wcag-target-size': '点击区域过小',
+        'wcag-text-size': '文字过小，不易阅读',
+        'wcag-line-height': '行高过小，文字可能重叠',
+        'empty-container': '空容器',
+        'max-nesting-depth': '嵌套层级过深',
+        'default-name': '未重命名的图层',
+        'component-bindings': '组件属性未被使用',
+      }
+    };
+    function ruleLabel(ruleName) {
+      return (RULE_LABELS[currentLang] || RULE_LABELS.en)[ruleName] || ruleName;
+    }
+
+    // Short annotation tips for canvas markers (no node name, action-oriented)
+    const ANNOTATION_TIPS = {
+      en: {
+        'spec-color': 'Color doesn\'t match any token — pick one from the library',
+        'spec-typography': 'Text style doesn\'t match any token — apply one from the library',
+        'spec-border-radius': 'Corner radius doesn\'t match any token — use a standard value',
+        'hardcoded-token': 'This value isn\'t linked to a variable — bind it to the library',
+        'no-text-style': 'No text style applied — pick one from the library',
+        'wcag-contrast': 'Text contrast is too low — increase it for readability',
+        'wcag-target-size': 'Tap area is under 44×44px — make it bigger',
+        'wcag-text-size': 'Text is under 12px — increase for readability',
+        'wcag-line-height': 'Line height is too tight — text lines may overlap',
+        'empty-container': 'Empty container — remove or add content',
+        'max-nesting-depth': 'Nested too deep — try flattening the layers',
+        'default-name': 'Still using a default name — rename to something descriptive',
+        'component-bindings': 'Component property defined but not wired to any child',
+      },
+      zh: {
+        'spec-color': '颜色不在 Token 中，请从库中选择',
+        'spec-typography': '文字样式不在 Token 中，请从库中应用',
+        'spec-border-radius': '圆角不在 Token 中，请使用标准值',
+        'hardcoded-token': '该值未绑定变量，请关联到库',
+        'no-text-style': '未应用文字样式，请从库中选择',
+        'wcag-contrast': '文字对比度不足，请提高以便阅读',
+        'wcag-target-size': '点击区域不足 44×44px，请增大',
+        'wcag-text-size': '文字小于 12px，请增大以便阅读',
+        'wcag-line-height': '行高过小，文字可能重叠',
+        'empty-container': '空容器，请移除或添加内容',
+        'max-nesting-depth': '嵌套过深，建议精简图层结构',
+        'default-name': '仍在使用默认名称，请重命名',
+        'component-bindings': '组件属性已定义但未连接到子图层',
+      }
+    };
+    function annotationTip(ruleName) {
+      return (ANNOTATION_TIPS[currentLang] || ANNOTATION_TIPS.en)[ruleName] || ruleLabel(ruleName);
+    }
+    function t(key) { return (TRANSLATIONS[currentLang] || TRANSLATIONS.en)[key] || key; }
+    function applyLocale() {
+      document.querySelectorAll('[data-i18n]').forEach(function(el) {
+        el.textContent = t(el.dataset.i18n);
+      });
+    }
+    function setLocale(lang) {
+      currentLang = lang;
+      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+      document.getElementById('lang-zh').classList.toggle('active', lang === 'zh');
+      applyLocale();
+      // Re-apply dynamic texts that depend on current state
+      setStatus(connected ? 'connected' : 'disconnected', '', lastBannerReason);
+      updateModeUI(currentMode);
+      if (typeof updateClearBarText === 'function') updateClearBarText();
+      parent.postMessage({ pluginMessage: { type: 'save-lang', lang: lang } }, '*');
+    }
+
+    // ─── Elements ───
+    const channelTrigger = document.getElementById('channel-trigger');
+    const channelTriggerLabel = document.getElementById('channel-trigger-label');
+    const channelPopup = document.getElementById('channel-popup');
+    const channelPopupOverlay = document.getElementById('channel-popup-overlay');
+    const connectBtn = document.getElementById('connect-btn');
+    const statusTextEl = document.getElementById('status-text');
+    const modeLibraryBtn = document.getElementById('mode-library');
+    const modeSpecBtn = document.getElementById('mode-spec');
+    const modeDescEl = document.getElementById('mode-desc');
+    const libraryGroup = document.getElementById('library-bar');
+    const libraryTrigger = document.getElementById('library-trigger');
+    const libraryTriggerLabel = document.getElementById('library-trigger-label');
+    const libraryPopup = document.getElementById('library-popup');
+    const libraryPopupOverlay = document.getElementById('library-popup-overlay');
+    const tokenInput = document.getElementById('token-input');
+    const tokenSaveBtn = document.getElementById('token-save-btn');
+    const logEl = document.getElementById('log');
+    const logClearBtn = document.getElementById('log-clear');
+    let emptyState = document.getElementById('empty-state');
+    const activityCount = document.getElementById('activity-count');
+
+
+    // ─── Tab Switching ───
+    document.querySelectorAll('.tab-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(function(t) { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+        document.querySelectorAll('.tab-pane').forEach(function(p) { p.classList.remove('active'); });
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+        document.querySelector('[data-tab-content="' + btn.dataset.tab + '"]').classList.add('active');
+      });
+    });
+
+    // ─── Language ───
+    document.getElementById('lang-en').addEventListener('click', function() { setLocale('en'); });
+    document.getElementById('lang-zh').addEventListener('click', function() { setLocale('zh'); });
+
+    // ─── Collapse/Expand ───
+    var collapseBtn = document.getElementById('collapse-btn');
+    collapseBtn.addEventListener('click', function() {
+      uiCollapsed = !uiCollapsed;
+      document.body.classList.toggle('collapsed', uiCollapsed);
+      collapseBtn.title = uiCollapsed ? 'Expand' : 'Collapse';
+      parent.postMessage({ pluginMessage: { type: 'resize-ui', width: 320, height: uiCollapsed ? COLLAPSED_HEIGHT : EXPANDED_HEIGHT } }, '*');
+    });
+
+    // ─── Connect ───
+    connectBtn.addEventListener('click', function() {
+      if (connected) { disconnect(); } else { connect(); }
+    });
+
+    // ─── Copy Config ───
+    document.getElementById('copy-config').addEventListener('click', function() {
+      const text = document.getElementById('mcp-config').textContent.trim();
+      const btn = document.getElementById('copy-config');
+      // Try modern Clipboard API, fallback to execCommand
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+          btn.textContent = currentLang === 'zh' ? '已复制!' : 'Copied!';
+          setTimeout(function() { btn.textContent = t('settings.copy'); }, 1200);
+        }, function() { fallbackCopy(text, btn); });
+      } else {
+        fallbackCopy(text, btn);
+      }
+    });
+    function fallbackCopy(text, btn) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;left:-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.textContent = currentLang === 'zh' ? '已复制!' : 'Copied!';
+      setTimeout(function() { btn.textContent = t('settings.copy'); }, 1200);
+    }
+
+    // ─── Logging ───
+    function log(text, type) {
+      if (emptyState && emptyState.parentNode) { emptyState.remove(); emptyState = null; }
+      const entry = document.createElement('div');
+      entry.className = 'log-entry' + (type ? ' ' + type : '');
+
+      const time = document.createElement('span');
+      time.className = 'time';
+      time.textContent = new Date().toLocaleTimeString() + ' ';
+      entry.appendChild(time);
+
+      // Detect direction from text content
+      if (text.charAt(0) === '\u2190') {
+        // Incoming request
+        const arrow = document.createElement('span');
+        arrow.className = 'arrow in';
+        arrow.textContent = '\u2190 ';
+        entry.appendChild(arrow);
+        const msg = document.createElement('span');
+        msg.className = 'msg';
+        msg.textContent = text.substring(2);
+        entry.appendChild(msg);
+      } else if (text.charAt(0) === '\u2192') {
+        // Outgoing response
+        const arrow = document.createElement('span');
+        arrow.className = 'arrow out';
+        arrow.textContent = '\u2192 ';
+        entry.appendChild(arrow);
+        const msg = document.createElement('span');
+        msg.className = 'msg';
+        msg.textContent = text.substring(2);
+        entry.appendChild(msg);
+      } else {
+        const msg = document.createElement('span');
+        msg.className = 'msg';
+        msg.textContent = text;
+        entry.appendChild(msg);
+      }
+
+      logEl.appendChild(entry);
+      logEl.scrollTop = logEl.scrollHeight;
+      logCount++;
+      activityCount.textContent = logCount + ' events';
+    }
+    logClearBtn.addEventListener('click', function() {
+      logEl.innerHTML = '';
+      logCount = 0;
+      activityCount.textContent = '';
+      // Re-add empty state
+      const es = document.createElement('div');
+      es.className = 'empty-state';
+      es.id = 'empty-state';
+      es.innerHTML = '<div class="empty-dot"></div><span data-i18n="activity.empty">' + t('activity.empty') + '</span>';
+      logEl.appendChild(es);
+      emptyState = es;
+    });
+
+    // ─── Status ───
+    function setStatus(state, text, reason) {
+      connectBtn.className = 'btn status-btn ' + state;
+      const statusSr = document.getElementById('status-sr');
+      const banner = document.getElementById('conn-banner');
+      const bannerTitle = document.getElementById('conn-banner-title');
+      const bannerHint = document.getElementById('conn-banner-hint');
+
+      // Track reason for locale re-apply (null = explicitly clear, undefined = keep previous)
+      if (reason !== undefined) lastBannerReason = reason;
+      var effectiveReason = lastBannerReason;
+
+      if (state === 'connected') {
+        lastBannerReason = null;
+        statusTextEl.textContent = t('btn.connected');
+        if (statusSr) statusSr.textContent = t('status.sr.connected');
+        connectBtn.disabled = false;
+        // Hide banner on successful connection
+        banner.classList.remove('visible', 'warn', 'error');
+      } else if (state === 'connecting') {
+        statusTextEl.textContent = t('btn.connecting');
+        if (statusSr) statusSr.textContent = t('status.sr.connecting');
+        connectBtn.disabled = true;
+        // Show subtle connecting banner only on first attempt;
+        // on retries, keep the previous diagnostic banner visible
+        if (reconnectAttempt === 0) {
+          bannerTitle.textContent = t('banner.connecting.title');
+          bannerHint.textContent = t('banner.connecting.hint');
+          banner.className = 'conn-banner visible warn';
+        }
+      } else {
+        statusTextEl.textContent = t('btn.connect');
+        if (statusSr) statusSr.textContent = t('status.sr.disconnected');
+        connectBtn.disabled = false;
+        // Show diagnostic banner based on reason
+        if (effectiveReason === 'relay_unreachable') {
+          bannerTitle.textContent = t('banner.relay.title');
+          bannerHint.textContent = reconnectAttempt >= 3
+            ? t('banner.relay.hint.persistent')
+            : t('banner.relay.hint');
+          banner.className = 'conn-banner visible error';
+        } else if (effectiveReason === 'retrying') {
+          bannerTitle.textContent = t('banner.retrying.title');
+          bannerHint.textContent = t('banner.retrying.hint');
+          banner.className = 'conn-banner visible warn';
+        } else {
+          // No reason (user disconnect or initial state) — hide banner
+          banner.classList.remove('visible', 'warn', 'error');
+        }
+      }
+
+      // Update settings tab connection info
+      document.getElementById('info-status').textContent =
+        state === 'connected' ? t('btn.connected') : state === 'connecting' ? t('btn.connecting') : 'Disconnected';
+      document.getElementById('info-channel').textContent = channelId;
+    }
+
+
+    // ─── Save feedback helper ───
+    function flashSaved(btn) {
+      const orig = btn.textContent;
+      btn.textContent = 'Saved';
+      btn.classList.add('success');
+      // fade-out starts after 900ms visible, 300ms fade-out transition, then restore
+      setTimeout(function() { btn.classList.add('fade-out'); }, 900);
+      setTimeout(function() {
+        btn.textContent = orig;
+        btn.classList.remove('success', 'fade-out');
+      }, 1500);
+    }
+
+    // ─── WebSocket ───
+    const RELAY_PORTS = [3055, 3056, 3057, 3058, 3059, 3060];
+    let currentRelayPort = null;
+    var racingSockets = []; // Track in-flight parallel probe sockets
+
+    function connect(silent) {
+      channelId = channelTriggerLabel.textContent || DEFAULT_CHANNEL;
+      parent.postMessage({ pluginMessage: { type: 'save-channel', channelId: channelId } }, '*');
+
+      if (ws) { ws.onclose = null; ws.close(); }
+      // Abort any in-flight parallel probe from a previous connect() call
+      racingSockets.forEach(function(s) { s.onopen = null; s.onerror = null; s.close(); });
+      racingSockets = [];
+      clearTimeout(reconnectTimer);
+      reconnectTimer = null;
+
+      setStatus('connecting', 'Connecting...');
+      if (!silent) log('Connecting (channel: ' + channelId + ')...', 'info');
+
+      tryConnectPorts(silent);
+    }
+
+    function tryConnectPorts(silent) {
+      // Parallel port probe: race all candidate ports simultaneously.
+      // The first to open wins; the rest are closed immediately.
+      // Prioritize last-known port, then try all others
+      var candidates = currentRelayPort
+        ? [currentRelayPort].concat(RELAY_PORTS.filter(function(p) { return p !== currentRelayPort; }))
+        : RELAY_PORTS.slice(0);
+
+      if (candidates.length === 0) {
+        setStatus('disconnected', 'Disconnected', 'relay_unreachable');
+        if (!silent) {
+          log(t('error.relay.unavailable'), 'error');
+          log(t('error.relay.suggestion'), 'info');
+        } else if (reconnectAttempt === 1) {
+          // First silent retry — show one brief notice
+          log(t('error.relay.unavailable') + ' ' + t('status.retrying'), 'error');
+        }
+        scheduleReconnect();
+        return;
+      }
+
+      var settled = false;
+      var openSockets = [];
+      var failCount = 0;
+
+      // Global timeout: if no port connects within 1.5s, all fail
+      var raceTimeout = setTimeout(function() {
+        if (settled) return;
+        settled = true;
+        openSockets.forEach(function(s) { s.onopen = null; s.onerror = null; s.close(); });
+        openSockets = [];
+        racingSockets = [];
+        setStatus('disconnected', 'Disconnected', 'relay_unreachable');
+        if (!silent) {
+          log(t('error.relay.unavailable'), 'error');
+          log(t('error.relay.suggestion'), 'info');
+        } else if (reconnectAttempt === 1) {
+          log(t('error.relay.unavailable') + ' ' + t('status.retrying'), 'error');
+        }
+        scheduleReconnect();
+      }, 1500);
+
+      candidates.forEach(function(port) {
+        var sock = new WebSocket('ws://localhost:' + port);
+        openSockets.push(sock);
+        racingSockets.push(sock);
+
+        sock.onopen = function() {
+          if (settled) { sock.close(); return; }
+          settled = true;
+          clearTimeout(raceTimeout);
+          // Close all other racing sockets
+          openSockets.forEach(function(s) { if (s !== sock) { s.onopen = null; s.onerror = null; s.close(); } });
+          racingSockets = [];
+          ws = sock;
+          currentRelayPort = port;
+          ws.send(JSON.stringify({ type: 'join', channel: channelId, role: 'plugin' }));
+          // Announce on control channel so MCP Server auto-switches
+          ws.send(JSON.stringify({ type: 'join', channel: '__control__', role: 'plugin' }));
+          ws.send(JSON.stringify({ type: 'channel-announce', channel: '__control__', designChannel: channelId }));
+          if (savedApiToken) {
+            ws.send(JSON.stringify({ type: 'set-api-token', channel: channelId, token: savedApiToken }));
+          }
+          // Sync all stored library fileKeys to MCP server
+          Object.keys(libraryEntries).forEach(function(fk) {
+            var entry = libraryEntries[fk];
+            if (entry && entry.name) {
+              ws.send(JSON.stringify({ type: 'set-library-file-key', channel: channelId, library: entry.name, fileKey: fk }));
+            }
+          });
+          setStatus('connected', 'Online');
+          // Clear stale error entries from failed reconnect attempts
+          var staleErrors = logEl.querySelectorAll('.log-entry.error');
+          staleErrors.forEach(function(el) { el.remove(); logCount = Math.max(0, logCount - 1); });
+          if (logCount > 0) { activityCount.textContent = logCount + ' events'; }
+          log('Connected on port ' + port, 'success');
+          connected = true;
+          reconnectAttempt = 0;
+          updateFixBtnTitle();
+          document.getElementById('info-port').textContent = String(port);
+          flushPendingResponses();
+
+          ws.onmessage = function(event) {
+            var msg;
+            try { msg = JSON.parse(event.data); } catch(e) { return; }
+            if (msg.type === 'ping') { ws.send(JSON.stringify({ type: 'pong', channel: channelId })); return; }
+            if (msg.type === 'file-name-resolved') { handleFileNameResolved(msg); return; }
+            if (msg.type === 'request') {
+              log('\u2190 ' + msg.method + ' (id=' + msg.id + ')');
+              try {
+                parent.postMessage({ pluginMessage: msg }, '*');
+              } catch (postErr) {
+                log('\u2190 postMessage to sandbox failed: ' + postErr.message, 'error');
+                ws.send(JSON.stringify({ id: msg.id, type: 'error', channel: channelId, error: { code: 'POST_MESSAGE_FAILED', message: 'Failed to forward to plugin sandbox: ' + postErr.message } }));
+              }
+              return;
+            }
+          };
+
+          ws.onclose = function() {
+            connected = false;
+            updateFixBtnTitle();
+            setStatus('disconnected', 'Disconnected', 'retrying');
+            // Only log on first disconnect; silent reconnects suppress noise
+            if (reconnectAttempt === 0) log('Disconnected', 'error');
+            scheduleReconnect();
+          };
+
+          ws.onerror = function() { log('Connection error', 'error'); };
+        };
+
+        sock.onerror = function() {
+          failCount++;
+          if (!settled && failCount >= candidates.length) {
+            settled = true;
+            clearTimeout(raceTimeout);
+            racingSockets = [];
+            setStatus('disconnected', 'Disconnected', 'relay_unreachable');
+            if (!silent) {
+              log(t('error.relay.unavailable'), 'error');
+              log(t('error.relay.suggestion'), 'info');
+            } else if (reconnectAttempt === 1) {
+              log(t('error.relay.unavailable') + ' ' + t('status.retrying'), 'error');
+            }
+            scheduleReconnect();
+          }
+        };
+      });
+    }
+
+    function disconnect() {
+      clearTimeout(reconnectTimer);
+      reconnectTimer = null;
+      if (ws) { ws.onclose = null; ws.close(); ws = null; }
+      connected = false;
+      updateFixBtnTitle();
+      setStatus('disconnected', 'Disconnected', null);
+      log('Disconnected by user', 'info');
+    }
+
+    let reconnectAttempt = 0;
+    function scheduleReconnect() {
+      if (reconnectTimer) return;
+      // Exponential backoff: 1s, 2s, 4s, 8s, capped at 30s (matches Bridge-side timing)
+      var delay = Math.min(1000 * Math.pow(2, reconnectAttempt), 30000);
+      reconnectAttempt++;
+      reconnectTimer = setTimeout(function() { reconnectTimer = null; connect(true); }, delay);
+    }
+
+    // ─── Plugin sandbox messages ───
+    window.onmessage = function(event) {
+      const msg = event.data.pluginMessage;
+      if (!msg) return;
+
+      if (msg.type === 'restore-lang') { setLocale(msg.lang || 'en'); return; }
+
+      if (msg.type === 'restore-channel') {
+        var restored = msg.channelId || DEFAULT_CHANNEL;
+        // Only use restored value if it exists in the channel popup
+        var validChannels = Array.from(channelPopup.querySelectorAll('[data-channel]')).map(function(el) { return el.dataset.channel; });
+        channelId = validChannels.indexOf(restored) >= 0 ? restored : DEFAULT_CHANNEL;
+        channelTriggerLabel.textContent = channelId;
+        // Update check marks
+        channelPopup.querySelectorAll('[data-channel]').forEach(function(el) {
+          el.classList.toggle('active', el.dataset.channel === channelId);
+          el.querySelector('.check').textContent = el.dataset.channel === channelId ? '✓' : '';
+        });
+        connect();
+        return;
+      }
+
+      if (msg.type === 'restore-mode') { updateModeUI(msg.mode || 'library'); return; }
+
+      if (msg.type === 'mode-changed') {
+        updateModeUI(msg.mode || 'library');
+        log('Mode \u2192 ' + (msg.mode === 'spec' ? 'Spec' : 'Library') + ' (via MCP)', 'info');
+        return;
+      }
+
+      if (msg.type === 'library-list') {
+        // libraries is now [{name, fileKey}]
+        // Build libraryEntries map for ws.onopen sync
+        libraryEntries = {};
+        (msg.libraries || []).forEach(function(lib) {
+          libraryEntries[lib.fileKey] = { name: lib.name, url: '' };
+        });
+        populateLibraryDropdown(msg.libraries || [], msg.inUseLibraries || [], msg.savedLibrary, msg.hasLocal || false);
+
+        // ─── Auto-refresh library names via REST API ───
+        // Detect if any library file was renamed since it was added.
+        // Only refresh once per plugin session to avoid repeated API calls.
+        if (ws && ws.readyState === WebSocket.OPEN && savedApiToken) {
+          (msg.libraries || []).forEach(function(lib) {
+            if (lib.fileKey && !(lib.fileKey in pendingNameRefresh)) {
+              pendingNameRefresh[lib.fileKey] = lib.name;
+              ws.send(JSON.stringify({ type: 'resolve-file-name', channel: channelId, fileKey: lib.fileKey, url: '' }));
+            }
+          });
+        }
+        return;
+      }
+
+      if (msg.type === 'restore-library') {
+        selectedLibrary = msg.library || null;
+        return;
+      }
+
+      if (msg.type === 'restore-token') {
+        savedApiToken = msg.token || '';
+        tokenInput.value = savedApiToken;
+        if (savedApiToken && ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ type: 'set-api-token', channel: channelId, token: savedApiToken }));
+        }
+        return;
+      }
+
+      if (msg.type === 'library-changed') {
+        selectedLibrary = msg.library || null;
+        updateLibrarySelectUI(selectedLibrary);
+        log('Library \u2192 ' + (selectedLibrary || 'none') + ' (via MCP)', 'info');
+        return;
+      }
+
+      if (msg.type === 'command_progress') {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          try { ws.send(JSON.stringify(Object.assign({}, msg, { channel: channelId }))); } catch(e) { /* best effort */ }
+        }
+        return;
+      }
+
+      if (msg.type === 'response' || msg.type === 'error') {
+        // Sandbox errors (e.g. "Node not found") are non-critical — show as info, not red
+        log('\u2192 ' + (msg.type === 'error' ? 'ERR: ' + msg.error.message : 'OK'), msg.type === 'error' ? 'info' : 'success');
+        var payload;
+        try {
+          payload = JSON.stringify(Object.assign({}, msg, { channel: channelId }));
+        } catch (serErr) {
+          log('\u2192 JSON.stringify failed: ' + serErr.message, 'error');
+          return;
+        }
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          try {
+            ws.send(payload);
+          } catch (sendErr) {
+            log('\u2192 ws.send failed, queuing: ' + sendErr.message, 'error');
+            queueResponse(payload);
+          }
+        } else {
+          log('\u2192 ws not open, queuing response (id=' + msg.id + ')', 'error');
+          queueResponse(payload);
+        }
+        return;
+      }
+
+      if (msg.type === 'lint-result' && msg.report) {
+        renderLintResult(msg.report);
+      }
+      if (msg.type === 'lint-fix-result') {
+        if (msg.error) {
+          lintFixBtn.disabled = false;
+          lintFixBtn.textContent = t('lint.fix');
+          log('\u2192 ' + t('lint.fix.allfailed').replace('{0}', msg.error), 'error');
+          var banner = document.getElementById('lint-error-banner');
+          banner.textContent = msg.error;
+          banner.style.display = 'block';
+        } else if (msg.result) {
+          renderLintFixResult(msg.result);
+        }
+      }
+    };
+
+    // ─── Mode ───
+    const MODE_DESCS = {
+      library: 'Check if designs use shared library tokens',
+      spec: 'Validate design values against DTCG token specs'
+    };
+    const MODE_DESCS_ZH = {
+      library: '审查设计是否使用了共享库 Token',
+      spec: '对照 DTCG Token 规范校验设计值'
+    };
+
+    function updateModeUI(mode) {
+      currentMode = mode;
+      modeLibraryBtn.className = mode === 'library' ? 'active' : '';
+      modeSpecBtn.className = mode === 'spec' ? 'active' : '';
+      modeDescEl.textContent = (currentLang === 'zh' ? MODE_DESCS_ZH : MODE_DESCS)[mode] || '';
+      libraryGroup.style.display = mode === 'library' ? '' : 'none';
+      if (mode === 'library') {
+        parent.postMessage({ pluginMessage: { type: 'get-libraries' } }, '*');
+      }
+    }
+
+    function setMode(mode) {
+      if (mode === currentMode) return;
+      updateModeUI(mode);
+      parent.postMessage({ pluginMessage: { type: 'save-mode', mode: mode } }, '*');
+      log('Mode \u2192 ' + (mode === 'library' ? 'Library' : 'Spec'), 'info');
+    }
+
+    modeLibraryBtn.addEventListener('click', function() { setMode('library'); });
+    modeSpecBtn.addEventListener('click', function() { setMode('spec'); });
+
+    // ─── Library Popup ───
+    let cachedLibraryData = null;
+
+    // ─── Channel Popup ───
+    function openChannelPopup() {
+      channelPopup.classList.add('open');
+      channelPopupOverlay.classList.add('open');
+      channelTrigger.classList.add('open');
+      var first = channelPopup.querySelector('.library-popup-item');
+      if (first) first.focus();
+    }
+    function closeChannelPopup() {
+      channelPopup.classList.remove('open');
+      channelPopupOverlay.classList.remove('open');
+      channelTrigger.classList.remove('open');
+    }
+    channelTrigger.addEventListener('click', function() {
+      if (channelPopup.classList.contains('open')) { closeChannelPopup(); } else { openChannelPopup(); }
+    });
+    channelPopupOverlay.addEventListener('click', closeChannelPopup);
+    channelPopup.addEventListener('click', function(e) {
+      var item = e.target.closest('[data-channel]');
+      if (!item) return;
+      var val = item.dataset.channel;
+      channelId = val;
+      channelTriggerLabel.textContent = val;
+      channelPopup.querySelectorAll('[data-channel]').forEach(function(el) {
+        el.classList.toggle('active', el.dataset.channel === val);
+        el.querySelector('.check').textContent = el.dataset.channel === val ? '✓' : '';
+      });
+      closeChannelPopup();
+      connect();
+    });
+
+    // ─── Library Popup ───
+    function handleLibraryKeydown(e) {
+      if (e.key === 'Escape') {
+        closeLibraryPopup();
+        libraryTrigger.focus();
+        return;
+      }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const items = libraryPopup.querySelectorAll('.library-popup-item');
+        if (items.length === 0) return;
+        const current = libraryPopup.querySelector('.library-popup-item:focus');
+        let index = Array.prototype.indexOf.call(items, current);
+        if (e.key === 'ArrowDown') {
+          index = (index + 1) % items.length;
+        } else {
+          index = index <= 0 ? items.length - 1 : index - 1;
+        }
+        items[index].focus();
+      }
+    }
+
+    function openLibraryPopup() {
+      libraryPopup.classList.add('open');
+      libraryPopupOverlay.classList.add('open');
+      libraryTrigger.classList.add('open');
+      document.addEventListener('keydown', handleLibraryKeydown);
+      const firstItem = libraryPopup.querySelector('.library-popup-item');
+      if (firstItem) firstItem.focus();
+    }
+
+    function closeLibraryPopup() {
+      libraryPopup.classList.remove('open');
+      libraryPopupOverlay.classList.remove('open');
+      libraryTrigger.classList.remove('open');
+      document.removeEventListener('keydown', handleLibraryKeydown);
+    }
+
+    libraryTrigger.addEventListener('click', function() {
+      if (libraryPopup.classList.contains('open')) { closeLibraryPopup(); } else { openLibraryPopup(); }
+    });
+    libraryPopupOverlay.addEventListener('click', closeLibraryPopup);
+
+    function updateTriggerLabel(value) {
+      if (!value) {
+        libraryTriggerLabel.textContent = 'None';
+        libraryTriggerLabel.className = 'label-text placeholder';
+      } else if (value === '__local__') {
+        libraryTriggerLabel.textContent = 'Local file styles';
+        libraryTriggerLabel.className = 'label-text';
+      } else {
+        libraryTriggerLabel.textContent = value;
+        libraryTriggerLabel.className = 'label-text';
+      }
+    }
+
+    const URL_RE = /figma\.com\/(?:file|design)\/([a-zA-Z0-9]+)/;
+
+    function populateLibraryDropdown(libraries, inUseLibraries, savedLibrary, hasLocal) {
+      libraryPopup.innerHTML = '';
+
+      addPopupItem('', 'None', !savedLibrary);
+
+      if (hasLocal) {
+        addPopupItem('__local__', 'Local file styles', savedLibrary === '__local__');
+      } else if (savedLibrary === '__local__') {
+        selectedLibrary = null;
+        parent.postMessage({ pluginMessage: { type: 'save-library', library: null } }, '*');
+      }
+
+      // libraries is [{name, fileKey}]
+      if (libraries.length > 0) {
+        const inUseSet = {};
+        (inUseLibraries || []).forEach(function(l) { inUseSet[l] = true; });
+        const inUse = libraries.filter(function(l) { return inUseSet[l.name]; });
+        const available = libraries.filter(function(l) { return !inUseSet[l.name]; });
+
+        if (inUse.length > 0 && available.length > 0) {
+          addPopupSeparator('In Use');
+          inUse.forEach(function(lib) { addPopupItem(lib.name, lib.name, lib.name === savedLibrary, lib.fileKey); });
+          addPopupSeparator('Available');
+          available.forEach(function(lib) { addPopupItem(lib.name, lib.name, lib.name === savedLibrary, lib.fileKey); });
+        } else {
+          libraries.forEach(function(lib) { addPopupItem(lib.name, lib.name, lib.name === savedLibrary, lib.fileKey); });
+        }
+      }
+
+      // Add URL input row
+      const divider = document.createElement('div');
+      divider.className = 'library-popup-divider';
+      libraryPopup.appendChild(divider);
+
+      const addRow = document.createElement('div');
+      addRow.className = 'library-popup-add-row';
+      const urlInput = document.createElement('input');
+      urlInput.className = 'input';
+      urlInput.type = 'text';
+      urlInput.placeholder = t('spec.library.placeholder');
+      addRow.appendChild(urlInput);
+      const addBtn = document.createElement('button');
+      addBtn.className = 'library-popup-add-btn';
+      addBtn.textContent = '+';
+      addBtn.addEventListener('click', function() { addLibraryByUrl(urlInput); });
+      addRow.appendChild(addBtn);
+      libraryPopup.appendChild(addRow);
+
+      selectedLibrary = savedLibrary || null;
+      updateTriggerLabel(selectedLibrary);
+    }
+
+    function addPopupItem(value, label, isActive, fileKey) {
+      const el = document.createElement('button');
+      el.className = 'library-popup-item' + (isActive ? ' active' : '');
+      el.dataset.value = value;
+      const check = document.createElement('span');
+      check.className = 'check';
+      check.textContent = isActive ? '\u2713' : '';
+      el.appendChild(check);
+      const text = document.createTextNode(label);
+      el.appendChild(text);
+      if (fileKey) {
+        const delBtn = document.createElement('button');
+        delBtn.className = 'delete-btn';
+        delBtn.textContent = '\u00d7';
+        delBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          parent.postMessage({ pluginMessage: { type: 'remove-library-entry', fileKey: fileKey } }, '*');
+        });
+        el.appendChild(delBtn);
+      }
+      el.addEventListener('click', function() { selectLibrary(value); });
+      libraryPopup.appendChild(el);
+    }
+
+    function addPopupSeparator(label) {
+      const el = document.createElement('div');
+      el.className = 'library-popup-separator';
+      el.textContent = label;
+      libraryPopup.appendChild(el);
+    }
+
+    function selectLibrary(value) {
+      selectedLibrary = value || null;
+      closeLibraryPopup();
+      updateTriggerLabel(selectedLibrary);
+
+      // Update check marks
+      libraryPopup.querySelectorAll('.library-popup-item').forEach(function(el) {
+        const match = el.dataset.value === (value || '');
+        el.classList.toggle('active', match);
+        el.querySelector('.check').textContent = match ? '\u2713' : '';
+      });
+
+      parent.postMessage({ pluginMessage: { type: 'save-library', library: selectedLibrary } }, '*');
+      if (selectedLibrary) log('Library \u2192 ' + selectedLibrary, 'info');
+
+      // Sync fileKey to MCP server
+      if (selectedLibrary && selectedLibrary !== '__local__' && ws && ws.readyState === WebSocket.OPEN) {
+        Object.keys(libraryEntries).forEach(function(fk) {
+          if (libraryEntries[fk].name === selectedLibrary) {
+            ws.send(JSON.stringify({ type: 'set-library-file-key', channel: channelId, library: selectedLibrary, fileKey: fk }));
+          }
+        });
+      }
+    }
+
+    function updateLibrarySelectUI(library) {
+      updateTriggerLabel(library);
+      libraryPopup.querySelectorAll('.library-popup-item').forEach(function(el) {
+        const match = el.dataset.value === (library || '');
+        el.classList.toggle('active', match);
+        el.querySelector('.check').textContent = match ? '\u2713' : '';
+      });
+    }
+
+    // ─── Add Library by URL ───
+    function addLibraryByUrl(input) {
+      const val = input.value.trim();
+      const m = val.match(URL_RE);
+      if (!m) {
+        showPopupError('Invalid URL \u2014 expected figma.com/design/...');
+        input.classList.add('error');
+        return;
+      }
+      if (!ws || ws.readyState !== WebSocket.OPEN) {
+        showPopupError('Not connected to relay');
+        return;
+      }
+      input.classList.remove('error');
+      clearPopupError();
+      input.disabled = true;
+      const btn = input.parentElement.querySelector('.library-popup-add-btn');
+      if (btn) btn.classList.add('loading');
+      ws.send(JSON.stringify({ type: 'resolve-file-name', channel: channelId, fileKey: m[1], url: val }));
+      log('Resolving library name for ' + m[1] + '...', 'info');
+    }
+
+    function handleFileNameResolved(msg) {
+      // ─── Handle name refresh (auto-sync on plugin open) ───
+      if (pendingNameRefresh[msg.fileKey] !== undefined) {
+        var oldName = pendingNameRefresh[msg.fileKey];
+        pendingNameRefresh[msg.fileKey] = null; // mark as done (not undefined, so it won't re-trigger)
+        if (msg.name && msg.name !== oldName) {
+          log('Library renamed: ' + oldName + ' \u2192 ' + msg.name, 'info');
+          parent.postMessage({ pluginMessage: {
+            type: 'save-library-entry',
+            fileKey: msg.fileKey,
+            name: msg.name,
+            url: msg.url || '',
+          } }, '*');
+          // If the renamed library is currently selected, update the selection too
+          if (selectedLibrary === oldName) {
+            parent.postMessage({ pluginMessage: { type: 'save-library', library: msg.name } }, '*');
+            selectedLibrary = msg.name;
+          }
+        }
+        return;
+      }
+
+      // ─── Handle new library add ───
+      const input = libraryPopup.querySelector('.library-popup-add-row .input');
+      const btn = libraryPopup.querySelector('.library-popup-add-btn');
+      if (input) { input.disabled = false; input.value = ''; }
+      if (btn) btn.classList.remove('loading');
+      clearPopupError();
+
+      if (msg.name) {
+        parent.postMessage({ pluginMessage: {
+          type: 'save-library-entry',
+          fileKey: msg.fileKey,
+          name: msg.name,
+          url: msg.url,
+        } }, '*');
+        log('Library added: ' + msg.name, 'success');
+      } else {
+        showPopupError(msg.error || 'Failed to resolve library name');
+        log('Failed to resolve library: ' + (msg.error || 'unknown error'), 'error');
+      }
+    }
+
+    let popupErrorTimer = null;
+
+    function showPopupError(text) {
+      clearPopupError();
+      const el = document.createElement('div');
+      el.className = 'library-popup-error';
+      el.textContent = text;
+      libraryPopup.appendChild(el);
+      popupErrorTimer = setTimeout(clearPopupError, 5000);
+    }
+
+    function clearPopupError() {
+      if (popupErrorTimer) { clearTimeout(popupErrorTimer); popupErrorTimer = null; }
+      const existing = libraryPopup.querySelector('.library-popup-error');
+      if (existing) existing.remove();
+    }
+
+    // ─── API Token ───
+    tokenSaveBtn.addEventListener('click', function() {
+      savedApiToken = tokenInput.value.trim();
+      parent.postMessage({ pluginMessage: { type: 'save-token', token: savedApiToken } }, '*');
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: 'set-api-token', channel: channelId, token: savedApiToken }));
+      }
+      flashSaved(tokenSaveBtn);
+      log('API Token ' + (savedApiToken ? 'saved' : 'cleared'), 'info');
+    });
+
+    // ─── Figma theme detection ───
+    function detectTheme() {
+      // Figma injects a dark background when dark theme is active
+      const bg = window.getComputedStyle(document.documentElement).backgroundColor;
+      const match = bg.match(/\d+/g);
+      if (match) {
+        const r = parseInt(match[0], 10);
+        const g = parseInt(match[1], 10);
+        const b = parseInt(match[2], 10);
+        const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        document.documentElement.setAttribute('data-theme', luminance < 0.5 ? 'dark' : 'light');
+      }
+    }
+    // Detect on load and observe for changes (debounced to avoid flicker)
+    let themeDebounceTimer = null;
+    function debouncedDetectTheme() {
+      clearTimeout(themeDebounceTimer);
+      themeDebounceTimer = setTimeout(detectTheme, 150);
+    }
+    detectTheme();
+    new MutationObserver(debouncedDetectTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class'] });
+
+    // ─── Lint Panel ───
+    const lintRunBtn = document.getElementById('lint-run-btn');
+    const lintFixBtn = document.getElementById('lint-fix-btn');
+    const lintResult = document.getElementById('lint-result');
+    const lintEmpty = document.getElementById('lint-empty');
+    const lintCategories = document.getElementById('lint-categories');
+    const lintScoreCardArea = document.getElementById('lint-score-card-area');
+    const lintScope = document.getElementById('lint-scope');
+    const clearBar = document.getElementById('lint-clear-bar');
+    const clearAnnotationsBtn = document.getElementById('lint-clear-annotations-btn');
+    let lastLintViolations = [];
+
+    clearAnnotationsBtn.addEventListener('click', function() {
+      parent.postMessage({ pluginMessage: { type: 'clear-annotations' } }, '*');
+      clearBar.classList.remove('visible');
+      // Reset all category annotate buttons back to default state
+      document.querySelectorAll('.lint-annotate-btn.active').forEach(function(btn) {
+        btn.classList.remove('active');
+        var count = btn.dataset.count || '';
+        btn.textContent = t('lint.annotate') + (count ? ' (' + count + ')' : '');
+        btn.dataset.annotated = '';
+      });
+    });
+
+    function updateClearBarText() {
+      clearAnnotationsBtn.textContent = t('lint.clearAnnotations');
+    }
+    updateClearBarText();
+
+    function updateFixBtnTitle() {
+      if (!lintFixBtn.disabled) {
+        lintFixBtn.title = '';
+      } else if (!connected) {
+        lintFixBtn.title = t('lint.autofix.disabled.notconnected');
+      } else {
+        lintFixBtn.title = t('lint.autofix.disabled.noviolations');
+      }
+    }
+
+    lintRunBtn.addEventListener('click', function() {
+      if (!connected) {
+        const banner = document.getElementById('lint-error-banner');
+        banner.textContent = t('error.notconnected.lint');
+        banner.style.display = 'block';
+        return;
+      }
+      document.getElementById('lint-error-banner').style.display = 'none';
+      lintRunBtn.disabled = true;
+      lintRunBtn.textContent = t('lint.running');
+      lintRunBtn.classList.add('loading');
+      // Send lint_check request through the plugin sandbox (cap at 500 violations for UI responsiveness)
+      parent.postMessage({ pluginMessage: { type: 'ui-lint-check', maxViolations: 500, lang: currentLang } }, '*');
+    });
+
+    lintFixBtn.addEventListener('click', function() {
+      if (!connected || lastLintViolations.length === 0) return;
+      lintFixBtn.disabled = true;
+      lintFixBtn.title = '';
+      lintFixBtn.textContent = t('lint.fixing');
+      parent.postMessage({ pluginMessage: { type: 'ui-lint-fix', violations: lastLintViolations } }, '*');
+    });
+
+    // Set initial title for disabled Auto Fix button
+    updateFixBtnTitle();
+
+    function renderLintResult(report) {
+      lintEmpty.style.display = 'none';
+      lintResult.style.display = '';
+      lintRunBtn.disabled = false;
+      lintRunBtn.textContent = t('lint.run');
+      lintRunBtn.classList.remove('loading');
+
+      // Scope info
+      const s = report.scope;
+      if (s) {
+        let scopeText = '';
+        if (s.type === 'selection') {
+          let names = (s.names || []).join(', ');
+          if (s.count > 5) names += ' …';
+          scopeText = (currentLang === 'zh' ? '审查范围：选中的 ' : 'Scope: ') + s.count +
+            (currentLang === 'zh' ? ' 个节点' : ' node' + (s.count > 1 ? 's' : '')) +
+            (names ? ' (' + names + ')' : '');
+        } else {
+          scopeText = (currentLang === 'zh' ? '审查范围：' : 'Scope: ') +
+            (s.pageName || 'Page') +
+            (currentLang === 'zh' ? '（' + s.count + ' 个顶层节点）' : ' (' + s.count + ' top-level nodes)');
+        }
+        if (s.truncated) scopeText += currentLang === 'zh' ? ' ⚠️ 已截断' : ' ⚠️ truncated';
+        lintScope.textContent = scopeText;
+      } else {
+        lintScope.textContent = '';
+      }
+
+      const total = report.summary.total;
+      const pass = report.summary.pass;
+      const violations = report.summary.violations;
+      const score = total > 0 ? Math.round((pass / total) * 100) : 100;
+
+      // Collect fixable violations
+      lastLintViolations = [];
+      (report.categories || []).forEach(function(cat) {
+        (cat.nodes || []).forEach(function(v) {
+          if (v.autoFixable) lastLintViolations.push(v);
+        });
+      });
+
+      lintFixBtn.disabled = !connected || lastLintViolations.length === 0;
+      lintFixBtn.textContent = t('lint.fix') + (lastLintViolations.length > 0 ? ' (' + lastLintViolations.length + ')' : '');
+      updateFixBtnTitle();
+
+      // Score card — compact
+      const scoreClass = score >= 80 ? 'good' : score >= 50 ? 'warn' : 'bad';
+      var fixableHtml = lastLintViolations.length > 0
+        ? '<div class="lint-stat"><span class="lint-stat-value fix">' + lastLintViolations.length + '</span><span class="lint-stat-label"> ' + t('lint.fixable') + '</span></div>'
+        : '';
+      lintScoreCardArea.innerHTML =
+        '<div class="lint-score-card">' +
+          '<div class="lint-score-top">' +
+            '<div class="lint-score-circle ' + scoreClass + '">' + score + '</div>' +
+            '<div class="lint-score-detail">' +
+              '<div class="lint-score-stats">' +
+                '<div class="lint-stat"><span class="lint-stat-value pass">' + pass + '</span><span class="lint-stat-label"> ' + t('lint.passed') + '</span></div>' +
+                '<div class="lint-stat"><span class="lint-stat-value fail">' + violations + '</span><span class="lint-stat-label"> ' + t('lint.violations') + '</span></div>' +
+                fixableHtml +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+
+      // Category breakdown — expandable with node list
+      lintCategories.innerHTML = '';
+      const cats = report.categories || [];
+      cats.sort(function(a, b) { return b.count - a.count; });
+      cats.forEach(function(cat) {
+        var group = document.createElement('div');
+        group.className = 'lint-cat-group';
+
+        // Header row — chevron + label + annotate button with count
+        var row = document.createElement('div');
+        row.className = 'lint-cat-row';
+
+        var nameSpan = document.createElement('span');
+        nameSpan.className = 'lint-cat-name';
+        nameSpan.innerHTML = '<span class="chevron">▶</span>' + ruleLabel(cat.rule);
+
+        var annotateBtn = document.createElement('button');
+        annotateBtn.className = 'lint-annotate-btn';
+        annotateBtn.title = t('lint.annotateTitle');
+        annotateBtn.textContent = t('lint.annotate') + ' (' + cat.count + ')';
+        annotateBtn.dataset.count = cat.count;
+        annotateBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var isAnnotated = annotateBtn.classList.contains('active');
+          if (!isAnnotated) {
+            var violations = (cat.nodes || []).map(function(v) {
+              return { nodeId: v.nodeId, suggestion: v.suggestion || annotationTip(cat.rule) };
+            });
+            parent.postMessage({ pluginMessage: { type: 'annotate-category', violations: violations } }, '*');
+            annotateBtn.textContent = t('lint.removeAnnotation') + ' (' + cat.count + ')';
+            annotateBtn.classList.add('active');
+            clearBar.classList.add('visible');
+          } else {
+            var tip = annotationTip(cat.rule);
+            var nodeIds = (cat.nodes || []).map(function(v) { return v.nodeId; });
+            parent.postMessage({ pluginMessage: { type: 'clear-category-annotations', nodeIds: nodeIds, suggestion: tip } }, '*');
+            annotateBtn.textContent = t('lint.annotate') + ' (' + cat.count + ')';
+            annotateBtn.classList.remove('active');
+          }
+        });
+
+        row.appendChild(nameSpan);
+        row.appendChild(annotateBtn);
+
+        // Node list (hidden by default)
+        var nodeList = document.createElement('div');
+        nodeList.className = 'lint-node-list';
+        (cat.nodes || []).forEach(function(v) {
+          var item = document.createElement('div');
+          item.className = 'lint-node-item';
+          item.innerHTML =
+            '<span class="lint-node-name">' + escapeHtml(v.nodeName) + '</span>' +
+            '<span class="lint-node-suggestion">' + escapeHtml(v.suggestion || annotationTip(cat.rule)) + '</span>';
+          item.addEventListener('click', function(e) {
+            e.stopPropagation();
+            parent.postMessage({ pluginMessage: { type: 'focus-node', nodeId: v.nodeId } }, '*');
+          });
+          nodeList.appendChild(item);
+        });
+
+        // Toggle expand/collapse
+        row.addEventListener('click', function() {
+          row.classList.toggle('expanded');
+          nodeList.classList.toggle('open');
+        });
+
+        group.appendChild(row);
+        group.appendChild(nodeList);
+        lintCategories.appendChild(group);
+      });
+
+      if (cats.length === 0) {
+        // Score card already shows 100 / 0 problems — no extra message needed
+      }
+    }
+
+    function escapeHtml(str) {
+      var div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function renderLintFixResult(result) {
+      lintFixBtn.disabled = true;
+      lintFixBtn.textContent = t('lint.fix');
+      lastLintViolations = [];
+      updateFixBtnTitle();
+
+      var fixedN = result.fixed || 0;
+      var failedN = result.failed || 0;
+      var errMsgs = (result.errors || []).map(function(e) { return e.error; });
+      var uniqueErrs = errMsgs.filter(function(v, i, a) { return a.indexOf(v) === i; });
+      var errSummary = uniqueErrs.join('; ');
+
+      if (fixedN > 0 && failedN === 0) {
+        log('\u2192 ' + t('lint.fix.success').replace('{0}', fixedN), 'success');
+        // Re-run lint to refresh results
+        lintRunBtn.click();
+      } else if (fixedN > 0 && failedN > 0) {
+        log('\u2192 ' + t('lint.fix.partial').replace('{0}', fixedN).replace('{1}', failedN).replace('{2}', errSummary), 'info');
+        // Some fixes applied — re-run lint to refresh
+        lintRunBtn.click();
+      } else if (failedN > 0) {
+        log('\u2192 ' + t('lint.fix.allfailed').replace('{0}', errSummary), 'error');
+        // Show error banner — don't re-run lint since nothing changed
+        var banner = document.getElementById('lint-error-banner');
+        banner.textContent = t('lint.fix.allfailed').replace('{0}', errSummary);
+        banner.style.display = 'block';
+      }
+    }
+
+    // ─── Init ───
+    parent.postMessage({ pluginMessage: { type: 'get-lang' } }, '*');
+    parent.postMessage({ pluginMessage: { type: 'get-channel' } }, '*');
+    parent.postMessage({ pluginMessage: { type: 'get-mode' } }, '*');
+    parent.postMessage({ pluginMessage: { type: 'get-library' } }, '*');
+    parent.postMessage({ pluginMessage: { type: 'get-token' } }, '*');
+
+    setTimeout(function() {
+      if (!connected) {
+        connect();
+      }
+    }, 500);
+  </script>
+</body>
+</html>

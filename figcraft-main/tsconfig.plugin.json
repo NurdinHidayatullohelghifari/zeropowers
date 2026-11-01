@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "outDir": "dist/plugin",
+    "rootDir": ".",
+    "typeRoots": ["node_modules/@figma"]
+  },
+  "include": [
+    "packages/shared/src/**/*.ts",
+    "packages/adapter-figma/src/**/*.ts",
+    "packages/quality-engine/src/**/*.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
+}

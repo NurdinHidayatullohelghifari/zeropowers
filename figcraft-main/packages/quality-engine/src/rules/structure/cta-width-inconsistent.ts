@@ -1,0 +1,85 @@
+import type { AbstractNode, FixDescriptor, LintContext, LintRule, LintViolation } from '../../types.js';
+
+/**
+ * Minimum width for a button to be a plausible CTA candidate. Icon-only
+ * navigation buttons (back arrow, close, menu) are intrinsically small —
+ * they should never be judged against the CTA-matches-input-width contract.
+ */
+const MIN_CTA_CANDIDATE_WIDTH = 100;
+
+function isFormLike(node: AbstractNode): boolean {
+  // Role takes precedence — explicit designer intent.
+  if (node.role === 'form' || node.role === 'actions') return true;
+  if (node.role) return false;
+  // Name heuristic is narrow on purpose: generic words like "content" / "body" /
+  // "footer" show up on non-form containers (e.g. a Top Content holding a back
+  // arrow + title), causing this rule to treat their icon buttons as CTAs.
+  return /\b(form|actions)\b/i.test(node.name);
+}
+
+function isButtonLike(node: AbstractNode): boolean {
+  // ── Declaration-driven: role overrides all heuristics ──
+  if (node.role === 'button') return true;
+  if (node.role && node.role !== 'button') return false;
+
+  return (
+    /button|btn|submit|continue|next|sign.?in|sign.?up|login|register|cta/i.test(node.name) ||
+    !!node.fills?.some((fill) => fill.visible !== false && fill.type === 'SOLID')
+  );
+}
+
+function isInputLike(node: AbstractNode): boolean {
+  // ── Declaration-driven: role overrides all heuristics ──
+  if (node.role === 'input' || node.role === 'field') return true;
+  if (node.role && node.role !== 'input' && node.role !== 'field') return false;
+
+  return (
+    /input|field|email|password|username|search/i.test(node.name) ||
+    !!node.strokes?.some((stroke) => stroke.visible !== false)
+  );
+}
+
+export const ctaWidthInconsistentRule: LintRule = {
+  name: 'cta-width-inconsistent',
+  description:
+    'Primary CTA buttons inside forms should match the dominant field width instead of appearing noticeably narrower.',
+  category: 'layout',
+  severity: 'heuristic',
+
+  check(node: AbstractNode, _ctx: LintContext): LintViolation[] {
+    if (node.type !== 'FRAME' && node.type !== 'COMPONENT') return [];
+    if (node.layoutMode !== 'VERTICAL') return [];
+    if (!isFormLike(node)) return [];
+    if (!node.children || node.children.length < 2) return [];
+
+    const inputs = node.children.filter(isInputLike).filter((child) => child.width != null);
+    const buttons = node.children
+      .filter(isButtonLike)
+      .filter((child) => child.width != null)
+      // Drop icon-only buttons: they are intrinsically small and not CTA candidates.
+      .filter((child) => (child.width as number) >= MIN_CTA_CANDIDATE_WIDTH);
+    if (inputs.length === 0 || buttons.length === 0) return [];
+
+    const targetWidth = Math.max(...inputs.map((child) => child.width as number));
+    return buttons
+      .filter((button) => (button.width as number) < targetWidth * 0.9)
+      .map((button) => ({
+        nodeId: button.id,
+        nodeName: button.name,
+        rule: 'cta-width-inconsistent',
+        severity: 'heuristic' as const,
+        currentValue: `CTA width ${Math.round(button.width as number)}px vs field width ${Math.round(targetWidth)}px`,
+        suggestion: `"${button.name}" is noticeably narrower than the form fields in "${node.name}". Set layoutAlign: STRETCH for a consistent CTA width.`,
+        autoFixable: true,
+        fixData: {
+          fix: 'stretch',
+          layoutAlign: 'STRETCH',
+        },
+      }));
+  },
+
+  describeFix(v): FixDescriptor | null {
+    if (!v.fixData) return null;
+    return { kind: 'set-properties', props: { layoutAlign: v.fixData.layoutAlign ?? 'STRETCH' } };
+  },
+};

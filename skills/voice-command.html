@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Command Agent | ZeroPowers</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background-color: #0d1117; color: #c9d1d9; line-height: 1.6; padding: 20px; margin: 0; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .back-link { display: inline-block; color: #58a6ff; text-decoration: none; margin-bottom: 24px; font-weight: 500; }
+        .back-link:hover { text-decoration: underline; }
+        .skill-card { background-color: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 32px; }
+        .skill-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+        .skill-title { font-size: 28px; font-weight: 600; color: #ffffff; margin: 0; }
+        .badges { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .badge { background-color: rgba(88, 166, 255, 0.15); color: #58a6ff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid rgba(88, 166, 255, 0.3); }
+        .badge.free { background-color: rgba(35, 134, 54, 0.15); color: #3fb950; border-color: rgba(35, 134, 54, 0.3); }
+        h3 { color: #ffffff; border-bottom: 1px solid #30363d; padding-bottom: 8px; margin-top: 24px; }
+        ul { padding-left: 20px; color: #8b949e; }
+        li { margin-bottom: 8px; }
+        .code-block { background-color: #010409; border: 1px solid #30363d; border-radius: 8px; padding: 16px; overflow-x: auto; font-family: monospace; font-size: 14px; color: #e6edf3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">← Kembali ke Daftar Skill</a>
+        <div class="skill-card">
+            <div class="skill-header">
+                <span style="font-size: 40px;">🎙️</span>
+                <h1 class="skill-title">Voice Command Agent</h1>
+            </div>
+            <div class="badges">
+                <span class="badge">Local AI</span>
+                <span class="badge">Whisper Offline</span>
+                <span class="badge free">100% Free</span>
+                <span class="badge">Hands-Free</span>
+            </div>
+            <p>Skill ini memungkinkan Anda mengontrol agen AI dengan suara secara offline. Menggunakan model Whisper lokal untuk Speech-to-Text, dan Piper/TTS lokal untuk Text-to-Speech. Cocok untuk coding hands-free atau automasi rumah pintar.</p>
+            <h3>✨ Fitur Utama</h3>
+            <ul>
+                <li><strong>100% Offline:</strong> Menggunakan Whisper AI lokal, tidak perlu internet.</li>
+                <li><strong>Multi-Bahasa:</strong> Support Bahasa Indonesia, Inggris, Jawa, dll.</li>
+                <li><strong>Wake Word:</strong> Aktifkan dengan kata kunci seperti "Hey Zero".</li>
+                <li><strong>Voice Feedback:</strong> AI menjawab dengan suara natural (Piper TTS).</li>
+            </ul>
+            <h3>🛠️ Contoh Perintah Suara</h3>
+            <div class="code-block">
+User (suara): "Hey Zero, buatkan file Python untuk kalkulator sederhana"
+
+Agen merespons (suara): "Baik, saya akan membuat file kalkulator.py sekarang."
+
+"action": "voice_command"
+"parameters": {
+  "wake_word": "Hey Zero",
+  "stt_model": "whisper-small-id",
+  "tts_model": "piper-indonesian",
+  "command": "buatkan file Python untuk kalkulator sederhana"
+}
+            </div>
+            <h3>💻 Persyaratan Sistem</h3>
+            <ul>
+                <li>Mikrofon yang berfungsi (USB/Bluetooth).</li>
+                <li>Speaker untuk output suara AI.</li>
+                <li>Library: <code>whisper</code>, <code>pyaudio</code>, <code>piper-tts</code>.</li>
+                <li>RAM minimal 8GB (16GB untuk model Whisper besar).</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

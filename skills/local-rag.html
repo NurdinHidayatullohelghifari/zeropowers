@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local RAG | ZeroPowers</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background-color: #0d1117; color: #c9d1d9; line-height: 1.6; padding: 20px; margin: 0; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .back-link { display: inline-block; color: #58a6ff; text-decoration: none; margin-bottom: 24px; font-weight: 500; }
+        .back-link:hover { text-decoration: underline; }
+        .skill-card { background-color: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 32px; }
+        .skill-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+        .skill-title { font-size: 28px; font-weight: 600; color: #ffffff; margin: 0; }
+        .badges { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .badge { background-color: rgba(88, 166, 255, 0.15); color: #58a6ff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid rgba(88, 166, 255, 0.3); }
+        .badge.free { background-color: rgba(35, 134, 54, 0.15); color: #3fb950; border-color: rgba(35, 134, 54, 0.3); }
+        h3 { color: #ffffff; border-bottom: 1px solid #30363d; padding-bottom: 8px; margin-top: 24px; }
+        ul { padding-left: 20px; color: #8b949e; }
+        li { margin-bottom: 8px; }
+        .code-block { background-color: #010409; border: 1px solid #30363d; border-radius: 8px; padding: 16px; overflow-x: auto; font-family: monospace; font-size: 14px; color: #e6edf3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">← Kembali ke Daftar Skill</a>
+        <div class="skill-card">
+            <div class="skill-header">
+                <span style="font-size: 40px;">🧠</span>
+                <h1 class="skill-title">Local RAG (Retrieval Augmented Generation)</h1>
+            </div>
+            <div class="badges">
+                <span class="badge">Local AI</span>
+                <span class="badge">PDF/Word Support</span>
+                <span class="badge free">100% Free</span>
+                <span class="badge">Offline-First</span>
+            </div>
+            <p>Skill ini memungkinkan agen AI lokal untuk "membaca" dan menjawab pertanyaan dari dokumen PDF, Word, atau TXT yang ada di komputer Anda. Semua proses embedding dan pencarian terjadi 100% lokal tanpa mengirim data ke cloud.</p>
+            <h3>✨ Fitur Utama</h3>
+            <ul>
+                <li><strong>Privasi Total:</strong> Dokumen tidak pernah keluar dari komputer Anda.</li>
+                <li><strong>Multi-Format:</strong> Mendukung PDF, DOCX, TXT, MD, dan CSV.</li>
+                <li><strong>Vector Search Lokal:</strong> Menggunakan ChromaDB atau FAISS offline.</li>
+                <li><strong>Context-Aware:</strong> AI menjawab berdasarkan isi dokumen Anda.</li>
+            </ul>
+            <h3>🛠️ Contoh Perintah ke Agen AI</h3>
+            <div class="code-block">
+"user": "Buatkan ringkasan dari file laporan-keuangan-2024.pdf"
+"action": "rag_query"
+"parameters": {
+  "file_path": "C:/Documents/laporan-keuangan-2024.pdf",
+  "query": "ringkasan eksekutif dan angka pendapatan utama",
+  "embedding_model": "nomic-embed-text"
+}
+            </div>
+            <h3>💻 Persyaratan Sistem</h3>
+            <ul>
+                <li>RAM minimal 8GB (16GB direkomendasikan untuk dokumen besar).</li>
+                <li>Python 3.10+ dengan library: <code>langchain</code>, <code>chromadb</code>, <code>pypdf</code>.</li>
+                <li>Model embedding lokal: <code>nomic-embed-text</code> via Ollama.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

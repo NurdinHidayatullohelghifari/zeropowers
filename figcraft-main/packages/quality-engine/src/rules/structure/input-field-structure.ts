@@ -1,0 +1,250 @@
+/**
+ * Input field structure rule — detect input fields that are not proper auto-layout frames.
+ *
+ * Flags nodes whose name contains "input" / "field" / "text field" (case-insensitive) that:
+ * - Are not FRAME type
+ * - Are frames but have no auto-layout
+ * - Have no stroke (border)
+ * - Have no cornerRadius
+ * - Have insufficient padding (< 8px total horizontal)
+ * - Have no text child (placeholder)
+ * - Are not using layoutAlign: STRETCH inside auto-layout parent
+ *
+ * Proper input fields should be auto-layout frames with stroke, corner radius,
+ * internal padding, and a text child for placeholder.
+ */
+
+import { DESIGN_CONSTANTS, SCREEN_NAME_RE } from '../../constants.js';
+import type { AbstractNode, FixDescriptor, LintContext, LintRule, LintViolation } from '../../types.js';
+import { tr } from '../../types.js';
+
+const INPUT_NAME_RE = /input|field|text.?field|search.?bar|email.?field|password.?field|输入|搜索框/i;
+
+function looksLikeScreenContainer(node: AbstractNode): boolean {
+  if (node.type !== 'FRAME') return false;
+  if (node.role === 'screen' || node.role === 'page') return true;
+  // Only treat as screen container if name matches screen patterns AND has multiple children
+  if (SCREEN_NAME_RE.test(node.name) && (node.children?.length ?? 0) >= 2) return true;
+  // Containers with 3+ children or 2+ frame-like children are not inputs
+  if ((node.children?.length ?? 0) >= 3) return true;
+  const frameLikeChildren =
+    node.children?.filter((c) => c.type === 'FRAME' || c.type === 'INSTANCE' || c.type === 'COMPONENT').length ?? 0;
+  if (frameLikeChildren >= 2) return true;
+  return false;
+}
+
+/**
+ * Detect "field group" containers — frames wrapping a label TEXT + an input FRAME.
+ * These are NOT input fields themselves and should not receive padding/cornerRadius fixes.
+ * Pattern: 2-3 children, at least one TEXT (label) and one FRAME/INSTANCE (actual input).
+ */
+function looksLikeFieldGroup(node: AbstractNode): boolean {
+  if (node.type !== 'FRAME' && node.type !== 'COMPONENT') return false;
+  if (!node.children || node.children.length < 2 || node.children.length > 3) return false;
+  const hasTextLabel = node.children.some((c) => c.type === 'TEXT');
+  const hasFrameChild = node.children.some(
+    (c) => c.type === 'FRAME' || c.type === 'INSTANCE' || c.type === 'COMPONENT',
+  );
+  return hasTextLabel && hasFrameChild;
+}
+
+function looksLikeInput(node: AbstractNode): boolean {
+  // ── Declaration-driven: role overrides all heuristics ──
+  if (node.role === 'input' || node.role === 'field') return true;
+  if (node.role && node.role !== 'input' && node.role !== 'field') return false;
+
+  // ── Heuristic fallback (only when role is absent) ──
+  if (looksLikeScreenContainer(node)) return false;
+  if (looksLikeFieldGroup(node)) return false;
+  if (INPUT_NAME_RE.test(node.name)) return true;
+  // A frame with stroke + single text child is likely an input
+  if (
+    node.type === 'FRAME' &&
+    node.children?.length === 1 &&
+    node.children[0].type === 'TEXT' &&
+    node.strokes?.some((s) => s.visible !== false)
+  ) {
+    return true;
+  }
+  return false;
+}
+
+const MIN_INPUT_HPAD = DESIGN_CONSTANTS.input.minHPad;
+
+export const inputFieldStructureRule: LintRule = {
+  name: 'input-field-structure',
+  description: 'Input fields must be auto-layout frames with stroke, corner radius, padding, and a text child.',
+  category: 'layout',
+  severity: 'heuristic',
+  ai: {
+    preventionHint:
+      'All input fields must be auto-layout frames with stroke (border), corner radius, internal padding, and placeholder text child — set layoutAlign: STRETCH',
+    phase: ['structure'],
+    tags: ['input'],
+  },
+
+  check(node: AbstractNode, ctx: LintContext): LintViolation[] {
+    if (!looksLikeInput(node)) return [];
+    const violations: LintViolation[] = [];
+
+    // Check 1: Not a frame
+    if (node.type !== 'FRAME' && node.type !== 'COMPONENT' && node.type !== 'INSTANCE') {
+      violations.push({
+        nodeId: node.id,
+        nodeName: node.name,
+        rule: 'input-field-structure',
+        severity: 'heuristic',
+        currentValue: `${node.type} used as input field`,
+        suggestion: tr(
+          ctx.lang,
+          `"${node.name}" looks like an input field but is a ${node.type}. Convert to an auto-layout frame with stroke, cornerRadius, padding, and a text child.`,
+          `「${node.name}」像输入框但实际是 ${node.type}。请转换为带描边、圆角、padding 和文本子节点的自动布局 frame。`,
+        ),
+        autoFixable: false,
+      });
+      return violations;
+    }
+
+    // Skip INSTANCE — their structure is defined by the component
+    if (node.type === 'INSTANCE') return violations;
+
+    // Check 2: No auto-layout
+    if (!node.layoutMode || node.layoutMode === 'NONE') {
+      violations.push({
+        nodeId: node.id,
+        nodeName: node.name,
+        rule: 'input-field-structure',
+        severity: 'heuristic',
+        currentValue: 'no auto-layout',
+        suggestion: tr(
+          ctx.lang,
+          `"${node.name}" is an input field without auto-layout. Set layoutMode: "HORIZONTAL", counterAxisAlignItems: "CENTER".`,
+          `「${node.name}」是输入框但没有自动布局。请设置 layoutMode: "HORIZONTAL",counterAxisAlignItems: "CENTER"。`,
+        ),
+        autoFixable: true,
+        fixData: {
+          fix: 'layout',
+          layoutMode: 'HORIZONTAL',
+          counterAxisAlignItems: 'CENTER',
+        },
+      });
+    }
+
+    // Check 3: No stroke (border)
+    const hasVisibleStroke = node.strokes?.some((s) => s.visible !== false);
+    if (!hasVisibleStroke) {
+      violations.push({
+        nodeId: node.id,
+        nodeName: node.name,
+        rule: 'input-field-structure',
+        severity: 'heuristic',
+        currentValue: 'no stroke',
+        suggestion: tr(
+          ctx.lang,
+          `"${node.name}" input field has no visible stroke (border). Add a stroke to indicate the input boundary.`,
+          `「${node.name}」输入框没有可见描边(边框)。请添加描边以标识输入区边界。`,
+        ),
+        autoFixable: false,
+      });
+    }
+
+    // Check 4: No corner radius
+    const hasRadius =
+      node.cornerRadius != null &&
+      (typeof node.cornerRadius === 'number' ? node.cornerRadius > 0 : node.cornerRadius.some((r) => r > 0));
+    if (!hasRadius) {
+      violations.push({
+        nodeId: node.id,
+        nodeName: node.name,
+        rule: 'input-field-structure',
+        severity: 'style',
+        currentValue: 'no corner radius',
+        suggestion: tr(
+          ctx.lang,
+          `"${node.name}" input field has no corner radius. Consider adding cornerRadius for a polished look.`,
+          `「${node.name}」输入框没有圆角。建议添加 cornerRadius 让视觉更精致。`,
+        ),
+        autoFixable: true,
+        fixData: { fix: 'cornerRadius', cornerRadius: DESIGN_CONSTANTS.input.defaultRadius },
+      });
+    }
+
+    // Check 5: Insufficient padding
+    if (node.layoutMode && node.layoutMode !== 'NONE') {
+      const hPad = (node.paddingLeft ?? 0) + (node.paddingRight ?? 0);
+      if (hPad < MIN_INPUT_HPAD) {
+        violations.push({
+          nodeId: node.id,
+          nodeName: node.name,
+          rule: 'input-field-structure',
+          severity: 'heuristic',
+          currentValue: `horizontal padding ${hPad}px`,
+          suggestion: tr(
+            ctx.lang,
+            `"${node.name}" input field has insufficient horizontal padding (${hPad}px < ${MIN_INPUT_HPAD}px).`,
+            `「${node.name}」输入框的水平内边距不足(${hPad}px < ${MIN_INPUT_HPAD}px)。`,
+          ),
+          autoFixable: true,
+          fixData: {
+            fix: 'padding',
+            paddingLeft: Math.max(node.paddingLeft ?? 0, 12),
+            paddingRight: Math.max(node.paddingRight ?? 0, 12),
+          },
+        });
+      }
+    }
+
+    // Check 6: No text child
+    const hasTextChild = node.children?.some((c) => c.type === 'TEXT');
+    if (!hasTextChild) {
+      violations.push({
+        nodeId: node.id,
+        nodeName: node.name,
+        rule: 'input-field-structure',
+        severity: 'style',
+        currentValue: 'no text child',
+        suggestion: tr(
+          ctx.lang,
+          `"${node.name}" input field has no text child for placeholder text.`,
+          `「${node.name}」输入框没有用于占位符的文本子节点。`,
+        ),
+        autoFixable: false,
+      });
+    }
+
+    return violations;
+  },
+
+  describeFix(v): FixDescriptor | null {
+    if (!v.fixData) return null;
+    const fix = v.fixData.fix as string | undefined;
+    switch (fix) {
+      case 'layout':
+        return {
+          kind: 'set-properties',
+          props: {
+            ...(v.fixData.layoutMode ? { layoutMode: v.fixData.layoutMode } : {}),
+            ...(v.fixData.counterAxisAlignItems ? { counterAxisAlignItems: v.fixData.counterAxisAlignItems } : {}),
+          },
+          requireType: ['FRAME', 'COMPONENT'],
+        };
+      case 'padding':
+        return {
+          kind: 'set-properties',
+          props: {
+            ...(v.fixData.paddingLeft != null ? { paddingLeft: v.fixData.paddingLeft } : {}),
+            ...(v.fixData.paddingRight != null ? { paddingRight: v.fixData.paddingRight } : {}),
+          },
+          requireType: ['FRAME', 'COMPONENT'],
+        };
+      case 'cornerRadius':
+        return {
+          kind: 'set-properties',
+          props: { cornerRadius: v.fixData.cornerRadius ?? 8 },
+          requireType: ['FRAME', 'COMPONENT'],
+        };
+      default:
+        return null;
+    }
+  },
+};

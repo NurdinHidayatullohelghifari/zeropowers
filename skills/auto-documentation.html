@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Documentation | ZeroPowers</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background-color: #0d1117; color: #c9d1d9; line-height: 1.6; padding: 20px; margin: 0; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .back-link { display: inline-block; color: #58a6ff; text-decoration: none; margin-bottom: 24px; font-weight: 500; }
+        .back-link:hover { text-decoration: underline; }
+        .skill-card { background-color: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 32px; }
+        .skill-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+        .skill-title { font-size: 28px; font-weight: 600; color: #ffffff; margin: 0; }
+        .badges { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .badge { background-color: rgba(88, 166, 255, 0.15); color: #58a6ff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid rgba(88, 166, 255, 0.3); }
+        .badge.free { background-color: rgba(35, 134, 54, 0.15); color: #3fb950; border-color: rgba(35, 134, 54, 0.3); }
+        h3 { color: #ffffff; border-bottom: 1px solid #30363d; padding-bottom: 8px; margin-top: 24px; }
+        ul { padding-left: 20px; color: #8b949e; }
+        li { margin-bottom: 8px; }
+        .code-block { background-color: #010409; border: 1px solid #30363d; border-radius: 8px; padding: 16px; overflow-x: auto; font-family: monospace; font-size: 14px; color: #e6edf3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">← Kembali ke Daftar Skill</a>
+        <div class="skill-card">
+            <div class="skill-header">
+                <span style="font-size: 40px;">📝</span>
+                <h1 class="skill-title">Auto Documentation Generator</h1>
+            </div>
+            <div class="badges">
+                <span class="badge">Local AI</span>
+                <span class="badge">Multi-Language</span>
+                <span class="badge free">100% Free</span>
+            </div>
+            <p>Skill ini memungkinkan agen AI untuk secara otomatis membaca kode program Anda dan menghasilkan dokumentasi lengkap (README, API docs, komentar kode) tanpa perlu menulis manual. Hemat waktu developer hingga 80%.</p>
+            <h3>✨ Fitur Utama</h3>
+            <ul>
+                <li><strong>Auto README:</strong> Generate README.md dari struktur project.</li>
+                <li><strong>API Documentation:</strong> Buat docs untuk endpoint REST/GraphQL.</li>
+                <li><strong>Inline Comments:</strong> Tambahkan komentar deskriptif di setiap fungsi.</li>
+                <li><strong>Multi-Bahasa:</strong> Support Python, JavaScript, TypeScript, Go, Rust, dll.</li>
+            </ul>
+            <h3>🛠️ Contoh Perintah ke Agen AI</h3>
+            <div class="code-block">
+"user": "Buatkan dokumentasi lengkap untuk folder src/ dan generate README.md"
+"action": "generate_docs"
+"parameters": {
+  "target_path": "./src",
+  "output_format": "markdown",
+  "include_examples": true,
+  "style": "professional"
+}
+            </div>
+            <h3>💻 Persyaratan Sistem</h3>
+            <ul>
+                <li>Model AI lokal dengan context window minimal 8K token.</li>
+                <li>Akses baca ke direktori project.</li>
+                <li>Opsional: <code>tree-sitter</code> untuk parsing kode yang lebih akurat.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

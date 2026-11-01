@@ -1,0 +1,26 @@
+{
+  "name": "figcraft-design",
+  "version": "0.1.1",
+  "description": "AI-powered Figma MCP bridge for design creation, token sync, linting, and auto-fix",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "bin": {
+    "figcraft-design": "./dist/index.js"
+  },
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "tsup --config tsup.config.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@figcraft/core-mcp": "0.1.0",
+    "@modelcontextprotocol/sdk": "^1.27",
+    "ws": "^8.18",
+    "zod": "^3.23"
+  }
+}
