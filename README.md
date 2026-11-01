@@ -34,17 +34,27 @@
 | 🛡️ | **Offline Security** | Scan vulnerability & secrets | `gitleaks`, `semgrep` |
 | 🌿 | **Smart Git** | Conventional commits & merge resolve | `git` CLI native |
 | 🧹 | **Auto-Refactor** | Bersihkan kode tanpa ubah fungsi | `ruff`, `prettier` |
+| 🧠 | **Local RAG** | Chat dengan dokumen PDF/Word lokal | `langchain`, `chromadb` |
+| 📝 | **Auto Docs** | Generate README & API docs otomatis | `tree-sitter`, native parser |
+| 🌐 | **Web Scraper** | Ekstrak data web dengan bahasa natural | `playwright`, `beautifulsoup4` |
+| 🗄️ | **Local DB** | Query database (SQL) via bahasa natural | `sqlalchemy`, `pandas` |
+| 🎙️ | **Voice Cmd** | Kontrol agen AI dengan suara (offline) | `whisper`, `piper-tts` |
 
 ---
 
 ## 📂 Struktur Direktori
-```text
+text
 zeropowers/
-├── 📄 README.md                 # Dokumentasi utama
-├── 📄 CONTRIBUTING.md           # Panduan kontribusi
-└── 📁 skills/                   # Otak dari ZeroPowers
-    ├── multimodal-generation.md
-    ├── local-testing-debugging.md
-    ├── offline-security-scanner.md
-    ├── smart-git-management.md
-    └── auto-refactoring-cleanup.md
+├── 📄 README.md # Dokumentasi utama
+├── 📄 CONTRIBUTING.md # Panduan kontribusi
+└── 📁 skills/ # Otak dari ZeroPowers
+├── multimodal-generation.md
+├── local-testing-debugging.md
+├── offline-security-scanner.md
+├── smart-git-management.md
+├── auto-refactoring-cleanup.md
+├── 🧠 local-rag.html # (BARU) Skill Local RAG
+├── 📝 auto-documentation.html # (BARU) Skill Auto Documentation
+├── 🌐 smart-web-scraper.html # (BARU) Skill Smart Web Scraper
+├── 🗄️ local-database.html # (BARU) Skill Local Database
+└── 🎙️ voice-command.html # (BARU) Skill Voice Command
