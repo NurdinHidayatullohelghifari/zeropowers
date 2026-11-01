@@ -13,57 +13,20 @@
             --accent-color: #58a6ff;
             --accent-hover: #79c0ff;
             --border-color: #30363d;
-            --success-color: #238636;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 20px;
-        }
+        body { background-color: var(--bg-color); color: var(--text-primary); line-height: 1.6; padding: 20px; }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1100px; margin: 0 auto; }
 
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            padding: 40px 20px;
-            margin-bottom: 20px;
-        }
+        .hero { text-align: center; padding: 40px 20px; margin-bottom: 20px; }
+        .hero h1 { font-size: 36px; color: #ffffff; margin-bottom: 12px; }
+        .hero p { font-size: 18px; color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
 
-        .hero h1 {
-            font-size: 36px;
-            color: #ffffff;
-            margin-bottom: 12px;
-        }
+        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-top: 30px; }
 
-        .hero p {
-            font-size: 18px;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Grid Layout untuk Skills */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 24px;
-            margin-top: 30px;
-        }
-
-        /* Kartu Skill */
         .skill-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -74,257 +37,118 @@
             transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .skill-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent-color);
-            box-shadow: 0 8px 24px rgba(88, 166, 255, 0.1);
-        }
+        .skill-card:hover { transform: translateY(-4px); border-color: var(--accent-color); box-shadow: 0 8px 24px rgba(88, 166, 255, 0.1); }
 
-        .skill-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
+        .skill-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .skill-icon { font-size: 28px; }
+        .skill-title { font-size: 20px; font-weight: 600; color: #ffffff; }
 
-        .skill-icon {
-            font-size: 28px;
-        }
+        .badges { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+        .badge { background-color: rgba(88, 166, 255, 0.15); color: var(--accent-color); padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid rgba(88, 166, 255, 0.3); }
+        .badge.free { background-color: rgba(35, 134, 54, 0.15); color: #3fb950; border-color: rgba(35, 134, 54, 0.3); }
 
-        .skill-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #ffffff;
-        }
+        .skill-description { font-size: 15px; color: var(--text-secondary); margin-bottom: 20px; flex-grow: 1; }
 
-        /* Badges */
-        .badges {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
+        .skill-link { display: inline-flex; align-items: center; color: var(--accent-color); text-decoration: none; font-weight: 600; font-size: 15px; transition: color 0.2s; }
+        .skill-link:hover { color: var(--accent-hover); text-decoration: underline; }
 
-        .badge {
-            background-color: rgba(88, 166, 255, 0.15);
-            color: var(--accent-color);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            border: 1px solid rgba(88, 166, 255, 0.3);
-        }
-
-        .badge.free {
-            background-color: rgba(35, 134, 54, 0.15);
-            color: #3fb950;
-            border-color: rgba(35, 134, 54, 0.3);
-        }
-
-        .skill-description {
-            font-size: 15px;
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-            flex-grow: 1;
-        }
-
-        /* Tombol Link */
-        .skill-link {
-            display: inline-flex;
-            align-items: center;
-            color: var(--accent-color);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 15px;
-            transition: color 0.2s;
-        }
-
-        .skill-link:hover {
-            color: var(--accent-hover);
-            text-decoration: underline;
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            margin-top: 60px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-        
-        .footer a {
-            color: var(--accent-color);
-            text-decoration: none;
-        }
-        .footer a:hover {
-            text-decoration: underline;
-        }
+        .footer { text-align: center; margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border-color); color: var(--text-secondary); font-size: 14px; }
+        .footer a { color: var(--accent-color); text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Hero Section -->
         <div class="hero">
             <h1>⚡ ZeroPowers</h1>
             <p>Superpowers untuk AI Coding Assistant Lokal. Mengubah Cline/Roo Code + Ollama menjadi asisten yang efisien, aman, dan 100% offline.</p>
         </div>
 
-        <!-- Grid Skills -->
         <div class="skills-grid">
 
             <!-- Skill 1: Local AI Efficiency -->
             <div class="skill-card">
-                <div class="skill-header">
-                    <span class="skill-icon">⚡</span>
-                    <h3 class="skill-title">Local AI Efficiency</h3>
-                </div>
-                <div class="badges">
-                    <span class="badge">Token Efficiency</span>
-                    <span class="badge">No Hallucination</span>
-                </div>
+                <div class="skill-header"><span class="skill-icon">⚡</span><h3 class="skill-title">Local AI Efficiency</h3></div>
+                <div class="badges"><span class="badge">Token Efficiency</span><span class="badge">No Hallucination</span></div>
                 <p class="skill-description">Optimasi output untuk model AI lokal. Hemat token, ringkas, dan bebas halusinasi API cloud.</p>
                 <a href="skills/local-ai-efficiency.html" class="skill-link">📄 Lihat Skill →</a>
             </div>
 
             <!-- Skill 2: Context Window Guard -->
             <div class="skill-card">
-                <div class="skill-header">
-                    <span class="skill-icon">🛡️</span>
-                    <h3 class="skill-title">Context Window Guard</h3>
-                </div>
-                <div class="badges">
-                    <span class="badge">Memory Management</span>
-                    <span class="badge">Auto-Summarize</span>
-                </div>
+                <div class="skill-header"><span class="skill-icon">🛡️</span><h3 class="skill-title">Context Window Guard</h3></div>
+                <div class="badges"><span class="badge">Memory Management</span><span class="badge">Auto-Summarize</span></div>
                 <p class="skill-description">Mencegah model kehabisan context window. Auto-summarize percakapan panjang dan jaga fokus agen.</p>
                 <a href="skills/context-window-guard.html" class="skill-link">📄 Lihat Skill →</a>
             </div>
 
             <!-- Skill 3: Offline-First Development -->
             <div class="skill-card">
-                <div class="skill-header">
-                    <span class="skill-icon">🌐</span>
-                    <h3 class="skill-title">Offline-First Development</h3>
-                </div>
-                <div class="badges">
-                    <span class="badge">No Internet</span>
-                    <span class="badge">Local Tools</span>
-                </div>
+                <div class="skill-header"><span class="skill-icon">🌐</span><h3 class="skill-title">Offline-First Development</h3></div>
+                <div class="badges"><span class="badge">No Internet</span><span class="badge">Local Tools</span></div>
                 <p class="skill-description">Panduan agen untuk selalu assume offline, tidak suggest cloud API, dan pakai tool lokal.</p>
                 <a href="skills/offline-first.html" class="skill-link">📄 Lihat Skill →</a>
             </div>
 
             <!-- Skill 4: Multimodal Generation -->
             <div class="skill-card">
-                <div class="skill-header">
-                    <span class="skill-icon">🎨</span>
-                    <h3 class="skill-title">Multimodal Generation</h3>
-                </div>
-                <div class="badges">
-                    <span class="badge">Text-to-Speech</span>
-                    <span class="badge">Text-to-Image</span>
-                    <span class="badge free">100% Free</span>
-                </div>
+                <div class="skill-header"><span class="skill-icon">🎨</span><h3 class="skill-title">Multimodal Generation</h3></div>
+                <div class="badges"><span class="badge">Text-to-Speech</span><span class="badge">Text-to-Image</span><span class="badge free">100% Free</span></div>
                 <p class="skill-description">Panduan lengkap Text-to-Speech, Text-to-Image, dan lainnya. 100% lokal, open-source, dan gratis!</p>
                 <a href="skills/multimodal-generation.html" class="skill-link">📄 Lihat Skill →</a>
             </div>
 
             <!-- Skill 5: Text-to-Video Generation -->
             <div class="skill-card">
-                <div class="skill-header">
-                    <span class="skill-icon">🎬</span>
-                    <h3 class="skill-title">Text-to-Video Generation</h3>
-                </div>
-                <div class="badges">
-                    <span class="badge">Local AI</span>
-                    <span class="badge">Open Source</span>
-                    <span class="badge free">100% Free</span>
-                </div>
+                <div class="skill-header"><span class="skill-icon">🎬</span><h3 class="skill-title">Text-to-Video Generation</h3></div>
+                <div class="badges"><span class="badge">Local AI</span><span class="badge">Open Source</span><span class="badge free">100% Free</span></div>
                 <p class="skill-description">Skill untuk menghasilkan video pendek dari prompt teks menggunakan model open-source yang dijalankan 100% lokal.</p>
                 <a href="skills/text-to-video.html" class="skill-link">📄 Lihat Skill →</a>
             </div>
 
-            <!-- Skill 6: Local RAG (BARU) -->
+            <!-- Skill 6: Local RAG -->
             <div class="skill-card">
-                <div class="skill-header">
-                    <span class="skill-icon">🧠</span>
-                    <h3 class="skill-title">Local RAG</h3>
-                </div>
-                <div class="badges">
-                    <span class="badge">Local AI</span>
-                    <span class="badge">PDF/Word</span>
-                    <span class="badge free">100% Free</span>
-                </div>
+                <div class="skill-header"><span class="skill-icon">🧠</span><h3 class="skill-title">Local RAG</h3></div>
+                <div class="badges"><span class="badge">Local AI</span><span class="badge">PDF/Word Support</span><span class="badge free">100% Free</span></div>
                 <p class="skill-description">Chat dengan dokumen PDF/Word lokal. AI menjawab berdasarkan isi dokumen, 100% offline dan privat.</p>
                 <a href="skills/local-rag.html" class="skill-link">📄 Lihat Skill →</a>
             </div>
 
-            <!-- Skill 7: Auto Documentation (BARU) -->
+            <!-- Skill 7: Auto Documentation -->
             <div class="skill-card">
-                <div class="skill-header">
-                    <span class="skill-icon">📝</span>
-                    <h3 class="skill-title">Auto Documentation</h3>
-                </div>
-                <div class="badges">
-                    <span class="badge">Local AI</span>
-                    <span class="badge">Multi-Language</span>
-                    <span class="badge free">100% Free</span>
-                </div>
+                <div class="skill-header"><span class="skill-icon">📝</span><h3 class="skill-title">Auto Documentation</h3></div>
+                <div class="badges"><span class="badge">Local AI</span><span class="badge">Multi-Language</span><span class="badge free">100% Free</span></div>
                 <p class="skill-description">Otomatis membuat dokumentasi dari kode program. Generate README, API docs, dan komentar kode.</p>
                 <a href="skills/auto-documentation.html" class="skill-link">📄 Lihat Skill →</a>
             </div>
 
-            <!-- Skill 8: Smart Web Scraper (BARU) -->
+            <!-- Skill 8: Smart Web Scraper -->
             <div class="skill-card">
-                <div class="skill-header">
-                    <span class="skill-icon">🌐</span>
-                    <h3 class="skill-title">Smart Web Scraper</h3>
-                </div>
-                <div class="badges">
-                    <span class="badge">Local AI</span>
-                    <span class="badge">No API</span>
-                    <span class="badge free">100% Free</span>
-                </div>
+                <div class="skill-header"><span class="skill-icon">🌐</span><h3 class="skill-title">Smart Web Scraper</h3></div>
+                <div class="badges"><span class="badge">Local AI</span><span class="badge">No API Needed</span><span class="badge free">100% Free</span></div>
                 <p class="skill-description">Ambil data dari website dengan bahasa natural. Ekspor ke CSV/JSON/Excel. Bisa dijadwalkan otomatis.</p>
                 <a href="skills/smart-web-scraper.html" class="skill-link">📄 Lihat Skill →</a>
             </div>
 
-            <!-- Skill 9: Local Database Manager (BARU) -->
+            <!-- Skill 9: Local Database Manager -->
             <div class="skill-card">
-                <div class="skill-header">
-                    <span class="skill-icon">🗄️</span>
-                    <h3 class="skill-title">Local Database Manager</h3>
-                </div>
-                <div class="badges">
-                    <span class="badge">Local AI</span>
-                    <span class="badge">SQLite/PostgreSQL</span>
-                    <span class="badge free">100% Free</span>
-                </div>
+                <div class="skill-header"><span class="skill-icon">🗄️</span><h3 class="skill-title">Local Database Manager</h3></div>
+                <div class="badges"><span class="badge">Local AI</span><span class="badge">SQLite/PostgreSQL</span><span class="badge free">100% Free</span></div>
                 <p class="skill-description">Kelola database lokal dengan bahasa natural. Tidak perlu hafal SQL — cukup tanya dalam bahasa Indonesia.</p>
                 <a href="skills/local-database.html" class="skill-link">📄 Lihat Skill →</a>
             </div>
 
-            <!-- Skill 10: Voice Command Agent (BARU) -->
+            <!-- Skill 10: Voice Command Agent -->
             <div class="skill-card">
-                <div class="skill-header">
-                    <span class="skill-icon">🎙️</span>
-                    <h3 class="skill-title">Voice Command Agent</h3>
-                </div>
-                <div class="badges">
-                    <span class="badge">Local AI</span>
-                    <span class="badge">Whisper Offline</span>
-                    <span class="badge free">100% Free</span>
-                </div>
+                <div class="skill-header"><span class="skill-icon">🎙️</span><h3 class="skill-title">Voice Command Agent</h3></div>
+                <div class="badges"><span class="badge">Local AI</span><span class="badge">Whisper Offline</span><span class="badge free">100% Free</span></div>
                 <p class="skill-description">Kontrol agen AI dengan suara secara offline. Menggunakan Whisper lokal untuk Speech-to-Text.</p>
                 <a href="skills/voice-command.html" class="skill-link">📄 Lihat Skill →</a>
             </div>
 
         </div>
 
-        <!-- Footer -->
         <div class="footer">
             <p>Dibuat dengan ❤️ untuk ekosistem <strong>ZeroPowers</strong>.</p>
             <p style="margin-top: 8px;">
