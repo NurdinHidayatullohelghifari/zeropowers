@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 Text-to-Video | ZeroPowers Skills</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --accent-color: #58a6ff;
+            --accent-hover: #79c0ff;
+            --border-color: #30363d;
+            --success-color: #238636;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Header & Navigasi */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--accent-color);
+            text-decoration: none;
+            margin-bottom: 24px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .back-link:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
+        }
+
+        /* Kartu Skill Utama */
+        .skill-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .skill-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .skill-icon {
+            font-size: 40px;
+        }
+
+        .skill-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        /* Badges / Tag */
+        .badges {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background-color: rgba(88, 166, 255, 0.15);
+            color: var(--accent-color);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(88, 166, 255, 0.3);
+        }
+
+        .badge.free {
+            background-color: rgba(35, 134, 54, 0.15);
+            color: #3fb950;
+            border-color: rgba(35, 134, 54, 0.3);
+        }
+
+        /* Konten */
+        .skill-description {
+            font-size: 16px;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+        }
+
+        h3 {
+            color: #ffffff;
+            font-size: 18px;
+            margin-top: 24px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        /* Code Block */
+        .code-block {
+            background-color: #010409;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            overflow-x: auto;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 14px;
+            color: #e6edf3;
+            margin-bottom: 16px;
+        }
+
+        .code-comment { color: #8b949e; }
+        .code-key { color: #79c0ff; }
+        .code-string { color: #a5d6ff; }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Tombol Kembali ke Halaman Utama -->
+        <a href="../index.html" class="back-link">← Kembali ke Daftar Skill ZeroPowers</a>
+
+        <!-- Kartu Skill -->
+        <div class="skill-card">
+            <div class="skill-header">
+                <span class="skill-icon">🎬</span>
+                <h1 class="skill-title">Text-to-Video Generation</h1>
+            </div>
+
+            <!-- Badge Fitur -->
+            <div class="badges">
+                <span class="badge">Local AI</span>
+                <span class="badge">Open Source</span>
+                <span class="badge free">100% Free</span>
+                <span class="badge">Offline-First</span>
+            </div>
+
+            <!-- Deskripsi -->
+            <p class="skill-description">
+                Skill ini memungkinkan agen AI lokal untuk menghasilkan video pendek dari prompt teks. 
+                Menggunakan model open-source (seperti Stable Video Diffusion atau AnimateDiff) yang dijalankan 
+                sepenuhnya di perangkat lokal tanpa mengandalkan API cloud berbayar.
+            </p>
+
+            <!-- Fitur Utama -->
+            <h3>✨ Fitur Utama</h3>
+            <ul>
+                <li><strong>Privasi Terjaga:</strong> Semua proses rendering terjadi di perangkat Anda (GPU lokal).</li>
+                <li><strong>Hemat Biaya:</strong> Tidak ada biaya langganan atau token API cloud.</li>
+                <li><strong>Format Fleksibel:</strong> Mendukung output MP4, WebM, dan GIF.</li>
+                <li><strong>Integrasi Mudah:</strong> Siap dipakai dengan framework agen AI lokal (Ollama, LM Studio, dll).</li>
+            </ul>
+
+            <!-- Cara Penggunaan -->
+            <h3>🛠️ Cara Penggunaan (Contoh Prompt untuk Agen)</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 12px;">
+                Aktifkan skill ini dan berikan perintah seperti berikut kepada agen AI Anda:
+            </p>
+            
+            <div class="code-block">
+<span class="code-comment">// Contoh instruksi ke agen ZeroPowers:</span>
+<span class="code-key">"user"</span>: <span class="code-string">"Buatkan video pendek 3 detik tentang drone yang terbang di atas kompleks pabrik industri modern saat matahari terbit, gaya sinematik."</span>
+
+<span class="code-comment">// Agen akan merespons dengan menjalankan tool lokal:</span>
+<span class="code-key">"action"</span>: <span class="code-string">"generate_video"</span>
+<span class="code-key">"parameters"</span>: {
+  <span class="code-key">"prompt"</span>: <span class="code-string">"cinematic drone shot over modern industrial factory complex at sunrise, 4k, highly detailed"</span>,
+  <span class="code-key">"duration"</span>: <span class="code-string">"3s"</span>,
+  <span class="code-key">"model"</span>: <span class="code-string">"stable-video-diffusion"</span>,
+  <span class="code-key">"output_format"</span>: <span class="code-string">"mp4"</span>
+}
+            </div>
+
+            <!-- Persyaratan Sistem -->
+            <h3>💻 Persyaratan Sistem</h3>
+            <ul>
+                <li>GPU dengan VRAM minimal 8GB (NVIDIA RTX 3060 atau lebih tinggi direkomendasikan).</li>
+                <li>Python 3.10+ dan lingkungan virtual (venv/conda) yang sudah terinstal.</li>
+                <li>Dependency: <code>diffusers</code>, <code>accelerate</code>, <code>torch</code>.</li>
+            </ul>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Dibuat dengan ❤️ untuk ekosistem <strong>ZeroPowers</strong>.</p>
+            <p style="margin-top: 8px;">
+                <a href="https://github.com/nurdinhidayatullohelghifari/zeropowers">Lihat Repository di GitHub</a>
+            </p>
+        </div>
+    </div>
+
+</body>
+</html>
